@@ -1,0 +1,67 @@
+{
+  "columns": {
+    "Marca temporal": "creado",
+    "Dirección de correo electrónico": "email",
+    "Nacionalidad": "nacionalidad_id",
+    "Número de Cédula de Identidad del estudiante": "cedula",
+    "Apellidos y Nombres del estudiante": "nombre_completo",
+    "Número de teléfono del estudiante": "telefono",
+    "Instituto donde estudia o desea estudiar:": "instituto_id",
+
+    "Sexo": "sexo_id",
+    "Tipo de estudiante": "tipo_estudiante_id",
+    "Carreras que estudia o quiere estudiar": "carrera_id",
+    "Semestre que cursa\nIndique en qué semestre tiene la mayor cantidad de asignaturas": "semestre_id",
+    "¿Cursó alguna vez estudios en una institución de Fe y Alegría?": "estudio_fya",
+
+    "Indique su dirección de habitación actual: Urbanización/Sector/Barrio; Avenida/Calle/Carrera; Casa/Apartamento/Otro; punto de referencia.": "direccion",
+    "Estado Civil": "estado_civil_id",
+    "¿Tiene hijos?": "hijos",
+    "¿Tiene alguna discapacidad?": "discapacidad",
+    "Si posee alguna enfermedad crónica que requiera tratamiento. Indique cuál": "enfermedad_cronica",
+
+    "Condición de actividad laboral. Usted actualmente está:": "condicion_laboral_id",
+    "Relación trabajo - carrera": "trabajo_relacion_id",
+    "Tipo de organización donde trabaja": "tipo_organizacion_id",
+    "Ramo o sector de trabajo": "sector_trabajo_id",
+    "Categoría ocupacional": "categoria_ocupacional_id",
+
+    "¿Con quién vive actualmente?": "tipo_convivencia_id",
+    "Tipo de vivienda": "tipo_vivienda_id",
+    "Tenencia de la vivienda": "tenencia_vivienda_id",
+
+    "Ambientes de la vivienda": "rel:ambientes",
+    "Activos en la vivienda": "rel:activos",
+    "Servicios en la vivienda": "rel:servicios",
+
+    "Frecuencia del Servicio AGUA": "frecuencia_servicio_agua_id",
+    "Frecuencia  del Servicio del ASEO": "frecuencia_servicio_aseo_id",
+    "Frecuencia  del Servicio de ELECTRICIDAD": "frecuencia_servicio_electricidad_id",
+    "Frecuencia  del Servicio de GAS (BOMBONA)": "frecuencia_servicio_gas_id",
+
+    "Transporte que usa": "transporte_id",
+    "¿Principalmente de quién depende económicamente?": "dependencia_economica_id",
+    "Fuente principal de ingreso familiar": "fuente_ingreso_familiar_id",
+    "Ingreso familiar mensual\" (referenciado en dólares US$)": "ingreso_familiar_id",
+
+    "Nivel educativo (padre)": "nivel_eduacion_padre_id",
+    "¿Trabaja? (padre)": "trabaja_padre",
+    "Tipo de empresa donde trabaja (padre)": "tipo_empresa_padre_id",
+    "Categoría ocupacional (padre)": "categoria_ocupacional_padre_id",
+    "Ramo o sector de trabajo (padre)": "sector_trabajo_padre_id",
+    "Vive en Venezuela (padre)": "padre_en_venezuela",
+    "Egresó del IUJO/Fe y Alegría (padre)": "padre_egresado_iujo",
+
+    "Nivel educativo (madre)": "nivel_eduacion_madre_id",
+    "¿Trabaja? (madre)": "trabaja_madre",
+    "Tipo de empresa donde trabaja (madre)": "tipo_empresa_madre_id",
+    "Categoría ocupacional (madre)": "categoria_ocupacional_madre_id",
+    "Ramo o sector de trabajo (madre)": "sector_trabajo_madre_id",
+    "¿Vive en Venezuela? (madre)": "madre_en_venezuela",
+    "¿Egresó del IUJO/ Fe y Alegría? (madre)": "madre_egresada_iujo",
+
+    "Cédula de identidad del estudiante (obligatorio).": "url_cedula",
+    "Veracidad de la información y autenticidad de los documentos.": "veracidad_id",
+    "Posee algún tipo de BECA de algún ente o institución oficial o privada": "tipo_beca_id"
+  }
+}

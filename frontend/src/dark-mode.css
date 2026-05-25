@@ -1,0 +1,245 @@
+/* Dark Mode Styles - Archivo separado para evitar purge de Tailwind 4 */
+
+.dark body {
+  background-color: rgb(2 6 23);
+  color: rgb(241 245 249);
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.dark .card,
+.dark .card-grit-home {
+  background-color: rgb(15 23 42);
+  border-color: rgb(51 65 85);
+  color: rgb(241 245 249);
+}
+
+/* Improve contrast for images and overlays in cards when in dark mode */
+.dark .container-logo img,
+.dark .container-logo picture img {
+  /* slightly desaturate and darken background images to make white logos and text pop */
+  filter: brightness(0.7) saturate(0.85);
+}
+
+.dark .style-overlay {
+  /* make overlays slightly darker in dark mode */
+  background: linear-gradient(to right, rgba(2,6,23,0.72), rgba(6,10,20,0.56));
+}
+
+/* Ensure SVG logos included inline keep their colors (if using currentColor), otherwise boost visibility */
+.dark svg[role="img"], .dark svg {
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+}
+
+/* For raster logos (png), apply a light stroke via box-shadow to separate from dark backgrounds */
+.dark .logo-raster {
+  filter: brightness(1.05);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.45) inset;
+}
+
+.dark .label-field,
+.dark .text-gray-700,
+.dark .text-gray-600,
+.dark .text-gray-500,
+.dark .text-gray-800 {
+  color: inherit;
+}
+
+.dark .input-field,
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: rgb(30 41 59);
+  border-color: rgb(71 85 105);
+  color: rgb(241 245 249);
+}
+
+.dark .input-field::placeholder,
+.dark input::placeholder,
+.dark textarea::placeholder,
+.dark select::placeholder {
+  color: rgb(148 163 184);
+}
+
+.dark .input-field:focus,
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: rgb(248 113 113);
+  --tw-ring-color: rgb(239 68 68);
+}
+
+.dark .bg-gray-100 {
+  background-color: rgb(2 6 23);
+}
+
+.dark .bg-gray-200 {
+  background-color: rgb(51 65 85);
+}
+
+.dark .bg-red-100 {
+  background-color: rgb(69 10 10);
+  color: rgb(254 202 202);
+  border-color: rgb(153 27 27);
+}
+
+.dark body.admin-shell {
+  background-color: rgb(2 6 23);
+  color: rgb(241 245 249);
+}
+
+.dark body.admin-shell .admin-surface {
+  background-color: rgb(15 23 42);
+  color: rgb(241 245 249);
+  border-color: rgb(51 65 85);
+}
+
+.dark body.admin-shell .border,
+.dark body.admin-shell .border-b,
+.dark body.admin-shell .border-t,
+.dark body.admin-shell .border-y {
+  border-color: rgb(51 65 85);
+}
+
+.dark body.admin-shell .text-gray-800,
+.dark body.admin-shell .text-gray-700,
+.dark body.admin-shell .text-gray-600,
+.dark body.admin-shell .text-gray-500 {
+  color: rgb(226 232 240);
+}
+
+.dark body.admin-shell .bg-gray-50 {
+  background-color: rgb(30 41 59);
+}
+
+.dark body.admin-shell table thead tr {
+  background-color: rgb(30 41 59);
+  color: rgb(203 213 225);
+}
+
+.dark body.admin-shell tbody tr:hover {
+  background-color: rgb(30 41 59);
+}
+
+.dark body.admin-shell tbody tr {
+  border-color: rgb(51 65 85);
+}
+
+.dark body.admin-shell input,
+.dark body.admin-shell select,
+.dark body.admin-shell textarea {
+  background-color: rgb(30 41 59);
+  border-color: rgb(71 85 105);
+  color: rgb(241 245 249);
+}
+
+.dark body.admin-shell input::placeholder,
+.dark body.admin-shell select::placeholder,
+.dark body.admin-shell textarea::placeholder {
+  color: rgb(148 163 184);
+}
+
+.dark body.admin-shell input:focus,
+.dark body.admin-shell select:focus,
+.dark body.admin-shell textarea:focus {
+  border-color: rgb(248 113 113);
+  --tw-ring-color: rgb(239 68 68);
+}
+
+.dark body.admin-shell .bg-gray-100 {
+  background-color: rgb(2 6 23);
+}
+
+.dark body.admin-shell .shadow-sm,
+.dark body.admin-shell .shadow-lg {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.dark body.admin-shell .bg-green-50 {
+  background-color: rgb(2 44 34);
+  color: rgb(167 243 208);
+  border-color: rgb(6 95 70);
+}
+
+.dark body.admin-shell .bg-red-50 {
+  background-color: rgb(69 10 10);
+  color: rgb(254 202 202);
+  border-color: rgb(153 27 27);
+}
+
+.dark body.admin-shell .bg-yellow-50 {
+  background-color: rgb(69 26 3);
+  color: rgb(253 230 138);
+  border-color: rgb(146 64 14);
+}
+
+.dark body.admin-shell .bg-blue-100,
+.dark body.admin-shell .bg-cyan-100,
+.dark body.admin-shell .bg-rose-100,
+.dark body.admin-shell .bg-purple-100 {
+  background-color: rgb(30 41 59);
+}
+
+.dark body.admin-shell .text-blue-500,
+.dark body.admin-shell .text-blue-600,
+.dark body.admin-shell .text-indigo-500,
+.dark body.admin-shell .text-green-500,
+.dark body.admin-shell .text-red-500,
+.dark body.admin-shell .text-purple-500,
+.dark body.admin-shell .text-cyan-600,
+.dark body.admin-shell .text-rose-600 {
+  color: rgb(248 250 252);
+}
+
+.dark input[type='radio'] {
+  accent-color: #f87171;
+}
+
+/* Make elements that use utility `bg-white` adapt in dark mode when needed */
+.dark .bg-white {
+  background-color: rgb(15 23 42) !important;
+  color: rgb(241 245 249) !important;
+}
+
+.dark .hover\:bg-gray-100:hover {
+  background-color: rgb(30 41 59);
+}
+
+/* Checkbox Group - Dark Mode */
+.dark .ck-item {
+  background-color: rgb(30 41 59);
+  border-color: rgb(71 85 105);
+}
+.dark .ck-item:hover {
+  background-color: rgb(51 65 85);
+  border-color: rgb(100 116 139);
+}
+.dark .ck-item:has(input:checked) {
+  background-color: rgb(69 10 10);
+  border-color: var(--color-primary2-500);
+}
+.dark .ck-item .ck-box {
+  border-color: rgb(71 85 105);
+  background-color: rgb(30 41 59);
+}
+.dark .ck-item:has(input:checked) .ck-box {
+  background-color: var(--color-primary2-500);
+  border-color: var(--color-primary2-500);
+}
+.dark .ck-item input[type="checkbox"]:checked + .ck-box {
+  background-color: var(--color-primary2-500);
+  border-color: var(--color-primary2-500);
+}
+.dark .ck-item:has(input:checked) .ck-box svg {
+  opacity: 1;
+  transform: scale(1);
+}
+.dark .ck-item input[type="checkbox"]:checked + .ck-box svg {
+  opacity: 1;
+  transform: scale(1);
+}
+.dark .ck-item .ck-text {
+  color: rgb(226 232 240);
+}
+.dark .ck-item input[type="checkbox"]:checked ~ .ck-text {
+  color: var(--color-primary2-400);
+}

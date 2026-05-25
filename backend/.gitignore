@@ -1,0 +1,19 @@
+# Dependencias (Se reconstruyen con composer install)
+/vendor/
+
+# Configuración sensible (Contraseñas de la base de datos)
+.env
+.env.local
+
+config/
+
+# Archivos del sistema y de IDE
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Logs y temporales
+*.log
+/storage/*.log
+/tmp/

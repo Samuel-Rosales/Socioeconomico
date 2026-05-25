@@ -1,0 +1,16 @@
+{
+    "name": "server/sistema-socioeconomico",
+    "description": "Backend para la gestión de datos socioeconómicos",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Samuel Rosales"
+        }
+    ],
+    "require": {}
+}

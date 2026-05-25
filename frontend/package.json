@@ -1,0 +1,21 @@
+{
+  "name": "frontend-socioeconomico",
+  "version": "1.0.0",
+  "description": "Formulario socioeconómico con PHP y Tailwind CSS",
+  "scripts": {
+    "build:css": "node ./scripts/build-css.js",
+    "watch:css": "node ./scripts/build-css.js --watch",
+    "build:prod": "node ./scripts/build-css.js --minify"
+  },
+  "keywords": [
+    "tailwind",
+    "php",
+    "formulario"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.5",
+    "tailwindcss": "^4.1.5"
+  }
+}

@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Si no es un archivo físico
+RewriteCond %{REQUEST_FILENAME} !-f
+# Y no es un directorio físico
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Entonces envía todo a index.php
+RewriteRule ^ index.php [L]

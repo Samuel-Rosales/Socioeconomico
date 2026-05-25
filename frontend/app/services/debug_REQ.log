@@ -1,0 +1,11 @@
+{
+    "timestamp": "2026-05-22 11:14:01",
+    "context": "ApiService::request - 403 Forbidden",
+    "instituto_id_header": "null",
+    "authorization_header": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImNpIjoiMzEzNTA0OTMiLCJyb2xfaWQiOjIsInJvbCI6IkFETUlOX1NFREUiLCJyb2xfbm9tYnJlIjoiQWRtaW5pc3RyYWRvciIsImluc3RpdHV0b19pZCI6MSwiaWF0IjoxNzc5NDYyODQxLCJleHAiOjE3Nzk0OTE2NDF9.x8FqcWPjmI_trvrdbu1oL2m-6vUlaYDnMHCVT_0CQok",
+    "tenant_instituto_id": "null",
+    "httpCode": 403,
+    "response": "{\"success\":false,\"data\":{\"errors\":{\"auth\":[\"No tienes permisos para esta acci\\u00f3n.\"]}},\"message\":\"No autorizado\"}",
+    "error": ""
+}
+--------------------------------------------------------------------------------
