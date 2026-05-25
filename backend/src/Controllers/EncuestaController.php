@@ -24,7 +24,7 @@ class EncuestaController
 
         $this->uploadDir = (string) Env::get('UPLOAD_CEDULAS_DIR', $defaultUploadDir);
 
-        $uploadPublicBase = (string) Env::get('UPLOAD_CEDULAS_PUBLIC_BASE', '/BACKEND-SOCIOECONOMICO/public/uploads/cedulas');
+        $uploadPublicBase = (string) Env::get('UPLOAD_CEDULAS_PUBLIC_BASE');
         $uploadPublicBase = '/' . trim(str_replace('\\', '/', $uploadPublicBase), '/');
         $this->uploadPublicBase = $uploadPublicBase;
     }
