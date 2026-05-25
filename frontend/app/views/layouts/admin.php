@@ -313,6 +313,8 @@ if ($cssVersion !== null) {
             let warningTimer = null;
             let countdownInterval = null;
             let toastEl = null;
+            let lastHeartbeat = 0;
+            const HEARTBEAT_THROTTLE = 5;
 
             const BASE_URL = <?php echo json_encode(BASE_URL); ?>;
 
@@ -402,9 +404,22 @@ if ($cssVersion !== null) {
                 resetInactivityTimer();
             };
 
-            ['click', 'scroll', 'keypress', 'mousemove', 'touchstart'].forEach(event => {
+            const throttledHeartbeat = () => {
+                const now = Date.now();
+                if (now - lastHeartbeat >= HEARTBEAT_THROTTLE * 1000) {
+                    lastHeartbeat = now;
+                    fetch(BASE_URL + '/admin/heartbeat', {
+                        method: 'POST',
+                        credentials: 'same-origin'
+                    }).catch(() => {});
+                }
+            };
+
+            ['click', 'scroll', 'keypress', 'touchstart'].forEach(event => {
                 document.addEventListener(event, updateLastActivity, { passive: true });
             });
+
+            document.addEventListener('mousemove', throttledHeartbeat, { passive: true });
 
             setInterval(() => {
                 fetch(BASE_URL + '/admin/heartbeat', {
