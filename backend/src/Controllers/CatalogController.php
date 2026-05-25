@@ -65,6 +65,25 @@ class CatalogController
     }
 
     /**
+     * GET /catalogo/all
+     * Obtiene todos los catálogos necesarios para el formulario en una sola petición
+     */
+    public function all($params = [])
+    {
+        $institutoId = TenantContext::resolveInstitutoId();
+
+        $result = $this->catalogService->getAllCatalogs($institutoId);
+
+        header('Content-Type: application/json');
+        http_response_code(200);
+        echo json_encode([
+            'success' => true,
+            'data' => $result,
+            'message' => 'Catálogos obtenidos correctamente',
+        ]);
+    }
+
+    /**
      * GET /catalogo
      * Lista catálogos disponibles (para construir el menú en el frontend)
      */

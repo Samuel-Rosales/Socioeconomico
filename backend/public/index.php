@@ -26,6 +26,9 @@ $router = new Router();
 
 // 4. Definimos las rutas
 
+// Obtener todos los catálogos en una sola petición (para formulario)
+$router->get('/catalogo/all', 'App\Controllers\CatalogController@all');
+
 // Ruta dinámica para catálogos (GET)
 $router->get('/catalogo/:resource', 'App\Controllers\CatalogController@index');
 

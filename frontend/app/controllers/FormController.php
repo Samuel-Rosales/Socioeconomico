@@ -80,80 +80,29 @@ class FormController extends Controller
 
 
     /**
-     * Carga todos los catálogos desde la API
+     * Carga todos los catálogos desde la API en una sola petición
      */
     private function cargarCatalogos()
     {
-        $catalogos = [];
-
-        // Lista de todos los catálogos necesarios
-        // El backend usa la ruta dinámica /catalogo/:resource
-        $endpoints = [
-            'nacionalidad' => '/catalogo/nacionalidad',
-            'sexo' => '/catalogo/sexo',
-            'tipo_estudiante' => '/catalogo/tipo-estudiante',
-            'carrera' => '/catalogo/carrera',
-            'semestre' => '/catalogo/semestre',
-            'estado_civil' => '/catalogo/estado-civil',
-            'condicion_laboral' => '/catalogo/condicion-laboral',
-            'relacion_laboral' => '/catalogo/relacion-laboral',
-            'tipo_organizacion' => '/catalogo/tipo-organizacion',
-            'sector_trabajo' => '/catalogo/sector-trabajo',
-            'categoria_ocupacional' => '/catalogo/categoria-ocupacional',
-            'tipo_convivencia' => '/catalogo/tipo-convivencia',
-            'tipo_vivienda' => '/catalogo/tipo-vivienda',
-            'tenencia_vivienda' => '/catalogo/tenencia-vivienda',
-            'ambiente_vivienda' => '/catalogo/ambiente-vivienda',
-            'activo_vivienda' => '/catalogo/activo-vivienda',
-            'servicio_vivienda' => '/catalogo/servicio-vivienda',
-            'frecuencia_agua' => '/catalogo/frecuencia-agua',
-            'frecuencia_aseo' => '/catalogo/frecuencia-aseo',
-            'frecuencia_electricidad' => '/catalogo/frecuencia-electricidad',
-            'frecuencia_gas' => '/catalogo/frecuencia-gas',
-            'transporte' => '/catalogo/transporte',
-            'dependencia_economica' => '/catalogo/dependencia-economica',
-            'fuente_ingreso' => '/catalogo/fuente-ingreso',
-            'ingreso_familiar' => '/catalogo/ingreso-familiar',
-            'nivel_educacion' => '/catalogo/nivel-educacion',
-            'tipo_empresa' => '/catalogo/tipo-empresa',
-            'veracidad' => '/catalogo/veracidad',
-            'tipo_beca' => '/catalogo/tipo-beca',
-        ];
-
-        // Cargar cada catálogo
-        foreach ($endpoints as $key => $endpoint) {
-            try {
-                $response = $this->apiService->get($endpoint);
-                if ($response['success']) {
-                    $payload = isset($response['data']) ? $response['data'] : null;
-                    $catalogos[$key] = $this->extraerDataCatalogo($payload);
-                } else {
-                    // Si falla, usar array vacío
-                    $catalogos[$key] = [];
-
-                }
-            } catch (\Exception $e) {
-                // En caso de error, usar array vacío
-                $catalogos[$key] = [];
+        try {
+            $response = $this->apiService->get('/catalogo/all');
+            if ($response['success'] && isset($response['data'])) {
+                return $response['data'];
             }
+        } catch (\Exception $e) {
         }
 
-        return $catalogos;
-    }
-
-    private function extraerDataCatalogo($payload)
-    {
-        if (!is_array($payload)) {
-            return [];
-        }
-
-        // Formato estándar: {success, data, message}
-        if (array_key_exists('success', $payload) && array_key_exists('data', $payload)) {
-            return $payload['data'];
-        }
-
-        // Formato legacy: array plano
-        return $payload;
+        return [
+            'nacionalidad' => [], 'sexo' => [], 'tipo_estudiante' => [], 'carrera' => [],
+            'semestre' => [], 'estado_civil' => [], 'condicion_laboral' => [],
+            'relacion_laboral' => [], 'tipo_organizacion' => [], 'sector_trabajo' => [],
+            'categoria_ocupacional' => [], 'tipo_convivencia' => [], 'tipo_vivienda' => [],
+            'tenencia_vivienda' => [], 'ambiente_vivienda' => [], 'activo_vivienda' => [],
+            'servicio_vivienda' => [], 'frecuencia_agua' => [], 'frecuencia_aseo' => [],
+            'frecuencia_electricidad' => [], 'frecuencia_gas' => [], 'transporte' => [],
+            'dependencia_economica' => [], 'fuente_ingreso' => [], 'ingreso_familiar' => [],
+            'nivel_educacion' => [], 'tipo_empresa' => [], 'veracidad' => [], 'tipo_beca' => [],
+        ];
     }
 
     /**

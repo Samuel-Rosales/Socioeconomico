@@ -866,4 +866,32 @@ class CatalogService {
 
         return $model->getAll();
     }
+
+    /**
+     * Obtiene todos los catálogos para el formulario en una sola llamada
+     */
+    public function getAllCatalogs($institutoId = null) {
+        $result = [];
+        $catalogKeys = [
+            'nacionalidad', 'sexo', 'tipo-estudiante', 'carrera', 'semestre',
+            'estado-civil', 'condicion-laboral', 'relacion-laboral', 'tipo-organizacion',
+            'sector-trabajo', 'categoria-ocupacional', 'tipo-convivencia', 'tipo-vivienda',
+            'tenencia-vivienda', 'ambiente-vivienda', 'activo-vivienda', 'servicio-vivienda',
+            'frecuencia-agua', 'frecuencia-aseo', 'frecuencia-electricidad', 'frecuencia-gas',
+            'transporte', 'dependencia-economica', 'fuente-ingreso', 'ingreso-familiar',
+            'nivel-educacion', 'tipo-empresa', 'veracidad', 'tipo-beca',
+        ];
+
+        foreach ($catalogKeys as $resource) {
+            $data = $this->getCatalogData($resource, $institutoId);
+            $key = str_replace('-', '_', $resource);
+            if (is_array($data) && !isset($data['error'])) {
+                $result[$key] = $data;
+            } else {
+                $result[$key] = [];
+            }
+        }
+
+        return $result;
+    }
 }
