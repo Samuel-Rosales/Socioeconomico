@@ -70,6 +70,22 @@ class FormController extends Controller
         // Cargar todos los catálogos desde la API
         $catalogos = $this->cargarCatalogos();
 
+        // $logEntry = [
+        //     'timestamp' => (new \DateTime())->format('Y-m-d H:i:s'),
+        //     'context' => 'FormController::index',
+        //     'instituto_id_header' => $effectiveHeaders['X-Instituto-Id'] ?? 'null',
+        //     'authorization_header' => $effectiveHeaders['Authorization'] ?? 'null',
+        //     'tenant_instituto_id' => $tenantInstitutoId ?? 'null',
+        //     'catalogos' => $catalogos,
+        //     'sedeActual' => $sedeActual,
+        //     'oldData' => $oldData,
+        //     'errors' => $errors
+        // ];
+
+        // $logLine = json_encode($logEntry, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . PHP_EOL . str_repeat('-', 80) . PHP_EOL;
+
+        // file_put_contents(__DIR__ . '/debug_index.log', $logLine, FILE_APPEND | LOCK_EX);
+
         $this->view('form/index', [
             'errors' => $errors,
             'old' => $oldData,
