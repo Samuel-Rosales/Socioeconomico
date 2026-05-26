@@ -86,8 +86,8 @@ class FormController extends Controller
     {
         try {
             $response = $this->apiService->get('/catalogo/all');
-            if ($response['success'] && isset($response['data'])) {
-                return $response['data'];
+            if ($response['success'] && isset($response['data']['data'])) {
+                return $response['data']['data'];
             }
         } catch (\Exception $e) {
         }
