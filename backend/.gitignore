@@ -17,3 +17,7 @@ Thumbs.db
 *.log
 /storage/*.log
 /tmp/
+
+
+# encuetas
+IUJOFORMCSV.csv
