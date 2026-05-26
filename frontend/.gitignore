@@ -21,3 +21,8 @@ config.local.php
 
 .agents
 skills-lock.json
+
+# Logs y temporales
+*.log
+/storage/*.log
+/tmp/
