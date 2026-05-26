@@ -384,7 +384,7 @@ class ReportesRepository
 
         $sqlCarreras = "SELECT DISTINCT c.id, c.nombre
             FROM Carrera c
-            INNER JOIN Instituto_carrera ic ON ic.carrera_id = c.id
+            INNER JOIN Instituto_Carrera ic ON ic.carrera_id = c.id
             " . $scope['where'] . "
             ORDER BY c.nombre ASC ";
 
@@ -424,7 +424,7 @@ class ReportesRepository
         }
 
         if (!empty($filters['carrera_id']) && is_numeric($filters['carrera_id'])) {
-            $where[] = 'e.carrera_id = :carrera_id';
+            $where[] = $withDerivedJoins ? 'ic.carrera_id = :carrera_id' : 'e.carrera_id = :carrera_id';
             $bindings['carrera_id'] = (int)$filters['carrera_id'];
         }
 
