@@ -127,7 +127,7 @@
         <h3 class="text-lg font-bold text-gray-800 mb-4">Accesos Rápidos</h3>
         <ul class="space-y-3">
             <?php
-                $dashRol = isset($sidebarRol) && is_string($sidebarRol) ? $sidebarRol : null;
+                $dashRol = isset($_SESSION['auth_user']['rol']['codigo']) ? $_SESSION['auth_user']['rol']['codigo'] : null;
                 $dashIsSuperAdmin = ($dashRol === 'SUPER_ADMIN');
             ?>
 
