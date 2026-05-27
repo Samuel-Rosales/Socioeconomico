@@ -1,5 +1,5 @@
 <?php
-    $assetBase = BASE_URL . '/public/assets';
+    $assetBase = BASE_URL . '/assets';
     if (!isset($usuarios) || !is_array($usuarios)) {
         $usuarios = ['items' => [], 'pagination' => ['page' => 1, 'per_page' => 10, 'total' => 0, 'total_pages' => 1]];
     }

@@ -1,4 +1,4 @@
-<div class="bg-white rounded-lg shadow-sm border p-6">
+<div class="bg-white rounded-lg shadow-sm border border-gray-400 p-6">
     <div class="flex items-center justify-between mb-6">
         <div>
             <h3 class="text-xl font-bold text-gray-800">Detalle de Encuesta</h3>
