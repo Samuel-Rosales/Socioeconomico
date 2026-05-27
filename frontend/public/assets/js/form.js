@@ -1,6 +1,7 @@
 // form.js - Interactividad del formulario socioeconómico
 
 document.addEventListener('DOMContentLoaded', function () {
+
     let bypassSubmitValidation = false;
 
     const pad = value => String(value).padStart(2, '0');
@@ -8,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getFechaLimites() {
         const today = new Date();
-        const maxDate = new Date(today.getFullYear() - 14, today.getMonth(), today.getDate());
+        const maxDate = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate());
         const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
         return {
             maxDate,
@@ -34,12 +35,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function validateFechaNacimientoInput(fechaNacimientoEl) {
-        if (!fechaNacimientoEl) return true;
+        if (!fechaNacimientoEl) return false;
 
         const fechaVal = fechaNacimientoEl.value;
         if (!fechaVal) {
-            fechaNacimientoEl.setCustomValidity('');
-            return true;
+            fechaNacimientoEl.setCustomValidity('Este campo es obligatorio.');
+            return false;
         }
 
         const limites = getFechaLimites();
@@ -270,8 +271,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const formData = new FormData(form);
-            console.log('[Formulario socioeconómico] inicio:', formData.get('inicio'));
-            console.log('[Formulario socioeconómico] payload:', Array.from(formData.entries()));
 
             bypassSubmitValidation = true;
             if (typeof form.requestSubmit === 'function') {
