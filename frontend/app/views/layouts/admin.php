@@ -122,7 +122,7 @@ if ($cssVersion !== null) {
         </a>
         <nav class="p-4 space-y-2">
 
-            <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-3 px-4 py-3 rounded-lg <?php echo ($current_page === 'users') ? 'bg-primary2-50 text-primary2-600 font-medium ' : 'text-gray-700 hover:bg-gray-100 '; ?>">
+            <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center gap-3 px-4 py-3 rounded-lg <?php echo ($current_page === 'dashboard') ? 'bg-primary2-50 text-primary2-600 font-medium ' : 'text-gray-700 hover:bg-gray-100 '; ?>">
                 <i class="fas fa-home w-5 text-center"></i> Panel Principal
             </a>
             <div class="space-y-1" data-dropdown data-open="<?php echo $isReportesSection ? '1' : '0'; ?>">
