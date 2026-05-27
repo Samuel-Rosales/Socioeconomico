@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use Core\Controller;
+use Utils\LogDebugger;
 use App\Services\ApiService;
 use App\Services\CatalogoService;
 use App\Services\UsuarioService;
@@ -74,6 +75,7 @@ class AdminController extends Controller
         }
 
         $authUser = isset($_SESSION['auth_user']) && is_array($_SESSION['auth_user']) ? $_SESSION['auth_user'] : [];
+        
         if (isset($authUser['rol']) && is_array($authUser['rol']) && !empty($authUser['rol']['codigo'])) {
             $rol = (string)$authUser['rol']['codigo'];
             $this->closeSession();
@@ -145,11 +147,24 @@ class AdminController extends Controller
                 $dashboard['ultima_encuesta'] = (string)$encuestasRecientes[0]['creado'];
             }
 
-            if(isset($_SESSION) && isset($_SESSION['codigo']) && $_SESSION['codigo'] === 'SUPER_ADMIN'){ 
-                
+            // $logEntry = [
+            //     'timestamp' => date('Y-m-d H:i:s'),
+            //     'action' => 'Acceso a Dashboard',
+            //     'user_id' => $_SESSION['auth_user']['id'] ?? null,
+            //     'user_ci' => $_SESSION['auth_user']['ci'] ?? null,
+            //     'user_nombre' => $_SESSION['auth_user']['nombre_completo'] ?? null,
+            //     'codigo_rol' => $_SESSION['auth_user']['rol']['codigo'] ?? null,
+            //     'codigo' => $_SESSION['codigo'] ?? null,
+            // ];
+
+            // LogDebugger::log($logEntry, 'admin_access');
+
+            if(isset($_SESSION) && isset($_SESSION['auth_user']) && $_SESSION['auth_user']['rol']['codigo'] === 'SUPER_ADMIN') { 
+                               
                 // Total de usuarios
                 $usuariosResponse = $this->usuarioService->listar();
                 $usuariosPayload = isset($usuariosResponse['data']) && is_array($usuariosResponse['data']) ? $usuariosResponse['data'] : null;
+                
                 if (!empty($usuariosResponse['success']) && $usuariosPayload) {
                     $usuariosData = (isset($usuariosPayload['success']) && array_key_exists('data', $usuariosPayload) && is_array($usuariosPayload['data']))
                         ? $usuariosPayload['data']
@@ -377,7 +392,9 @@ class AdminController extends Controller
         unset($_SESSION['flash_type'], $_SESSION['flash_message'], $_SESSION['flash_errors']);
 
         $authUser = isset($_SESSION['auth_user']) && is_array($_SESSION['auth_user']) ? $_SESSION['auth_user'] : [];
+        
         $actorRol = null;
+
         if (isset($authUser['rol']) && is_array($authUser['rol']) && !empty($authUser['rol']['codigo'])) {
             $actorRol = (string)$authUser['rol']['codigo'];
         }

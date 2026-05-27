@@ -31,6 +31,7 @@ class Autoloader
             'App\\Services\\' => $baseDir . 'app' . DIRECTORY_SEPARATOR . 'services' . DIRECTORY_SEPARATOR,
             'App\\Exceptions\\' => $baseDir . 'app' . DIRECTORY_SEPARATOR . 'exceptions' . DIRECTORY_SEPARATOR,
             'Core\\' => $baseDir . 'core' . DIRECTORY_SEPARATOR,
+            'Utils\\' => $baseDir . 'utils' . DIRECTORY_SEPARATOR,
         ];
 
         // Buscar el archivo correspondiente

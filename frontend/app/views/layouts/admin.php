@@ -1,30 +1,31 @@
 <?php
-$assetBase = BASE_URL . '/assets';
+    use Utils\LogDebugger;
+    $assetBase = BASE_URL . '/assets';
 
-// Cache busting: avoid browser hard-cache when output.css changes.
-// Determine which CSS file exists in the current entrypoint's assets folder.
-// todo esto es para que recargue el css en caso de estar en modo dev o actualizar los estilos para que
-// recargen y los vuelva a cargar para tomar los nuevos cambios 
-$cssCandidates = ['output.css'];
-$cssFile = 'output.css';
-$cssVersion = null;
+    // Cache busting: avoid browser hard-cache when output.css changes.
+    // Determine which CSS file exists in the current entrypoint's assets folder.
+    // todo esto es para que recargue el css en caso de estar en modo dev o actualizar los estilos para que
+    // recargen y los vuelva a cargar para tomar los nuevos cambios 
+    $cssCandidates = ['output.css'];
+    $cssFile = 'output.css';
+    $cssVersion = null;
 
-$assetsDiskDir = ROOT_PATH . DIRECTORY_SEPARATOR . 'assets';
-foreach ($cssCandidates as $candidate) {
-    $candidateDiskPath = $assetsDiskDir
-        ? ($assetsDiskDir . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $candidate)
-        : '';
-    if ($candidateDiskPath && is_file($candidateDiskPath)) {
-        $cssFile = $candidate;
-        $cssVersion = @filemtime($candidateDiskPath) ?: null;
-        break;
+    $assetsDiskDir = ROOT_PATH . DIRECTORY_SEPARATOR . 'assets';
+    foreach ($cssCandidates as $candidate) {
+        $candidateDiskPath = $assetsDiskDir
+            ? ($assetsDiskDir . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $candidate)
+            : '';
+        if ($candidateDiskPath && is_file($candidateDiskPath)) {
+            $cssFile = $candidate;
+            $cssVersion = @filemtime($candidateDiskPath) ?: null;
+            break;
+        }
     }
-}
 
-$cssHref = $assetBase . '/css/' . $cssFile;
-if ($cssVersion !== null) {
-    $cssHref .= '?v=' . $cssVersion;
-}
+    $cssHref = $assetBase . '/css/' . $cssFile;
+    if ($cssVersion !== null) {
+        $cssHref .= '?v=' . $cssVersion;
+    }
 
 ?>
 <!DOCTYPE html>
@@ -43,59 +44,74 @@ if ($cssVersion !== null) {
 <body class="admin-shell font-sans leading-normal tracking-normal flex h-screen overflow-hidden ">
 
     <?php
-    $sidebarRol = isset($sidebarRol) && is_string($sidebarRol) ? $sidebarRol : null;
-    $authUser = (isset($authUser) && is_array($authUser)) ? $authUser : [];
-    $headerUserName = 'Administrador';
-    if (!empty($authUser['nombre_completo']) && is_string($authUser['nombre_completo'])) {
-        $headerUserName = trim((string)$authUser['nombre_completo']);
-    } elseif (!empty($authUser['ci']) && is_string($authUser['ci'])) {
-        $headerUserName = 'CI ' . trim((string)$authUser['ci']);
-    }
+        $sidebarRol =  $_SESSION['auth_user']['rol']['codigo'] ?? null;
+        $authUser =  $_SESSION['auth_user'] ?? [];
+        $headerUserName = 'Administrador';
+        if (!empty($authUser['nombre_completo']) && is_string($authUser['nombre_completo'])) {
+            $headerUserName = trim((string)$authUser['nombre_completo']);
+        } elseif (!empty($authUser['ci']) && is_string($authUser['ci'])) {
+            $headerUserName = 'CI ' . trim((string)$authUser['ci']);
+        }   
 
-    $headerUserMeta = '';
-    if (isset($authUser['rol']) && is_array($authUser['rol']) && !empty($authUser['rol']['nombre'])) {
-        $headerUserMeta = (string)$authUser['rol']['nombre'];
-    } elseif (isset($authUser['rol']) && is_array($authUser['rol']) && !empty($authUser['rol']['codigo'])) {
-        $headerUserMeta = (string)$authUser['rol']['codigo'];
-    }
+        //  $logEntry = [
+        //     'timestamp' => date('Y-m-d H:i:s'),
+        //     'action' => 'Acceso a Dashboard',
+        //     'user_id' => $_SESSION['auth_user']['id'] ?? null,
+        //     'user_ci' => $_SESSION['auth_user']['ci'] ?? null,
+        //     'user_nombre' => $_SESSION['auth_user']['nombre_completo'] ?? null,
+        //     'sidebar_rol' => $sidebarRol,
+        //     'auth_user' => $authUser,
+        //     'user_name' => $authUser['nombre_completo'] ?? null,
+        // ];
 
-    if (isset($authUser['instituto']) && is_array($authUser['instituto'])) {
-        $institutoTxt = '';
-        if (!empty($authUser['instituto']['siglas']) && is_string($authUser['instituto']['siglas'])) {
-            $institutoTxt = (string)$authUser['instituto']['siglas'];
-        } elseif (!empty($authUser['instituto']['nombre']) && is_string($authUser['instituto']['nombre'])) {
-            $institutoTxt = (string)$authUser['instituto']['nombre'];
+        // LogDebugger::log($logEntry, 'adminphp');
+
+        $headerUserMeta = '';
+        if (isset($authUser['rol']) && is_array($authUser['rol']) && !empty($authUser['rol']['nombre'])) {
+
+            $headerUserMeta = (string)$authUser['rol']['nombre'];
+        } elseif (isset($authUser['rol']) && is_array($authUser['rol']) && !empty($authUser['rol']['codigo'])) {
+            
+            $headerUserMeta = (string)$authUser['rol']['codigo'];
         }
 
-        if ($institutoTxt !== '') {
-            $headerUserMeta = ($headerUserMeta !== '') ? ($headerUserMeta . ' · ' . $institutoTxt) : $institutoTxt;
+        if (isset($authUser['instituto']) && is_array($authUser['instituto'])) {
+            $institutoTxt = '';
+            if (!empty($authUser['instituto']['siglas']) && is_string($authUser['instituto']['siglas'])) {
+                $institutoTxt = (string)$authUser['instituto']['siglas'];
+            } elseif (!empty($authUser['instituto']['nombre']) && is_string($authUser['instituto']['nombre'])) {
+                $institutoTxt = (string)$authUser['instituto']['nombre'];
+            }
+
+            if ($institutoTxt !== '') {
+                $headerUserMeta = ($headerUserMeta !== '') ? ($headerUserMeta . ' · ' . $institutoTxt) : $institutoTxt;
+            }
         }
-    }
 
-    $isSuperAdmin = ($sidebarRol === 'SUPER_ADMIN');
+        $isSuperAdmin = ($sidebarRol === 'SUPER_ADMIN');
 
-    $current_page = isset($current_page) ? (string)$current_page : '';
+        $current_page = isset($current_page) ? (string)$current_page : '';
 
-    // Menú desplegable de reportes por vista.
-    $reportesMenuItems = [
-        [
-            'key' => 'reportes_dashboard_general',
-            'label' => 'Resumen General',
-            'href' => BASE_URL . '/admin/reportes/dashboard-general',
-        ],
-        [
-            'key' => 'reportes_analisis_academico',
-            'label' => 'Análisis Académico',
-            'href' => BASE_URL . '/admin/reportes/analisis-academico',
-        ],
-        [
-            'key' => 'reportes_demografico_vulnerabilidad',
-            'label' => 'Perfil Social',
-            'href' => BASE_URL . '/admin/reportes/demografico-vulnerabilidad',
-        ],
-    ];
+        // Menú desplegable de reportes por vista.
+        $reportesMenuItems = [
+            [
+                'key' => 'reportes_dashboard_general',
+                'label' => 'Resumen General',
+                'href' => BASE_URL . '/admin/reportes/dashboard-general',
+            ],
+            [
+                'key' => 'reportes_analisis_academico',
+                'label' => 'Análisis Académico',
+                'href' => BASE_URL . '/admin/reportes/analisis-academico',
+            ],
+            [
+                'key' => 'reportes_demografico_vulnerabilidad',
+                'label' => 'Perfil Social',
+                'href' => BASE_URL . '/admin/reportes/demografico-vulnerabilidad',
+            ],
+        ];
 
-    $isReportesSection = ($current_page === 'reportes' || strpos($current_page, 'reportes_') === 0);
+        $isReportesSection = ($current_page === 'reportes' || strpos($current_page, 'reportes_') === 0);
     ?>
     <!-- Sidebar -->
     <aside id="mobile-sidebar" class="bg-white w-64 h-screen text-gray-800 hidden md:grid md:grid-rows-[auto_1fr_auto] fixed inset-y-0 left-0 z-999 md:z-30 overflow-y-auto">
@@ -172,17 +188,17 @@ if ($cssVersion !== null) {
                 </button>
                 <h2 class="text-xl font-semibold text-gray-800 ml-4 md:ml-0">
                     <?php
-                    $titles = [
-                        'dashboard' => 'Panel Principal',
-                        'reportes' => 'Reportes',
-                        'reportes_dashboard_general' => 'Reportes · Resumen General',
-                        'reportes_analisis_academico' => 'Reportes · Análisis Académico',
-                        'reportes_demografico_vulnerabilidad' => 'Reportes · Perfil Socioeconómico por Carreras',
-                        'users' => 'Gestión de Usuarios',
-                        'responses' => 'Respuestas Recibidas',
-                        'catalogs' => 'Configuración de Opciones para las Encuestas'
-                    ];
-                    echo isset($titles[$current_page]) ? $titles[$current_page] : 'Administración';
+                        $titles = [
+                            'dashboard' => 'Panel Principal',
+                            'reportes' => 'Reportes',
+                            'reportes_dashboard_general' => 'Reportes · Resumen General',
+                            'reportes_analisis_academico' => 'Reportes · Análisis Académico',
+                            'reportes_demografico_vulnerabilidad' => 'Reportes · Perfil Socioeconómico por Carreras',
+                            'users' => 'Gestión de Usuarios',
+                            'responses' => 'Respuestas Recibidas',
+                            'catalogs' => 'Configuración de Opciones para las Encuestas'
+                        ];
+                        echo isset($titles[$current_page]) ? $titles[$current_page] : 'Administración';
                     ?>
                 </h2>
             </div>
@@ -200,10 +216,10 @@ if ($cssVersion !== null) {
                     <?php endif; ?>
                 </div>
                 <?php
-                $themeToggleId = 'themeToggleAdmin';
-                $themeToggleAriaLabel = 'Cambiar entre modo claro y oscuro';
-                include __DIR__ . '/../components/theme-toggle.php';
-                unset($themeToggleId, $themeToggleAriaLabel);
+                    $themeToggleId = 'themeToggleAdmin';
+                    $themeToggleAriaLabel = 'Cambiar entre modo claro y oscuro';
+                    include __DIR__ . '/../components/theme-toggle.php';
+                    unset($themeToggleId, $themeToggleAriaLabel);
                 ?>
             </div>
         </header>
