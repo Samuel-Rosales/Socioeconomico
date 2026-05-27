@@ -243,3 +243,13 @@
 .dark .ck-item input[type="checkbox"]:checked ~ .ck-text {
   color: var(--color-primary2-400);
 }
+
+.dark .selec-darck-inten {
+  background-color: var(--color-primary2-400);
+  color: rgb(248 250 252);
+}
+
+.dark .selec-darck-inten:hover {
+  background-color: var(--color-primary2-400);
+  color: rgb(248 250 252);
+}

@@ -120,8 +120,8 @@ $assetBase = BASE_URL . '/assets';
                     $isActive = isset($resource) && (string)$resource === $itemResource;
 
                     $btnClass = $isActive
-                        ? 'bg-primary-50 text-primary-600 font-medium'
-                        : 'hover:bg-gray-50 text-gray-600';
+                        ? 'bg-primary2-50 text-primary2-600 font-medium selec-darck-inten '
+                        : 'text-gray-700 hover:bg-gray-100 ';
                     ?>
                     <li class="catalog-category-item" data-label="<?php echo htmlspecialchars(mb_strtolower($itemLabel, 'UTF-8'), ENT_QUOTES); ?>">
                         <a href="<?php echo htmlspecialchars($buildCatalogUrl($itemResource)); ?>" class="block w-full text-left px-3 py-2 rounded-md <?php echo $btnClass; ?>">
