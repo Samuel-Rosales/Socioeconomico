@@ -223,7 +223,7 @@
             $renderMultiSelect = function ($name, $label, array $options, array $selectedIds) {
                 echo '<div class="md:col-span-2">';
                 echo '<label class="label-field">' . htmlspecialchars($label) . '</label>';
-                echo '<select name="' . htmlspecialchars($name) . '[]" class="input-field w-full min-h-[120px]" multiple>';
+                echo '<select name="' . htmlspecialchars($name) . '[]" class="input-field w-full min-h-30" multiple>';
                 foreach ($options as $opt) {
                     if (!is_array($opt) || !isset($opt['id'])) {
                         continue;
