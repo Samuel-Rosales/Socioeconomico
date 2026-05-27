@@ -26,6 +26,11 @@ class CatalogoService
         return $this->api->get('/catalogo');
     }
 
+    public function all($params = [])
+    {
+        return $this->api->get('/catalogo/all', $params);
+    }
+
     public function catalogo($resource, $params = [])
     {
         $resource = trim((string)$resource);
