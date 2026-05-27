@@ -1,5 +1,5 @@
 <?php
-$assetBase = BASE_URL . '/public/assets';
+$assetBase = BASE_URL . '/assets';
 ?>
 
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
