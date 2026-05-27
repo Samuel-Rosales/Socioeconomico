@@ -975,56 +975,82 @@ class AdminController extends Controller
     private function buildEncuestaEditCatalogs(array $encuesta)
     {
         $catalogs = [
-            'instituto' => $this->fetchSimpleCatalog('instituto'),
-            'nacionalidad' => $this->fetchSimpleCatalog('nacionalidad'),
-            'sexo' => $this->fetchSimpleCatalog('sexo'),
-            'tipo_estudiante' => $this->fetchSimpleCatalog('tipo-estudiante'),
-            'semestre' => $this->fetchSimpleCatalog('semestre'),
-            'estado_civil' => $this->fetchSimpleCatalog('estado-civil'),
-            'tipo_beca' => $this->fetchSimpleCatalog('tipo-beca'),
-            'condicion_laboral' => $this->fetchSimpleCatalog('condicion-laboral'),
-            'relacion_laboral' => $this->fetchSimpleCatalog('relacion-laboral'),
-            'tipo_organizacion' => $this->fetchSimpleCatalog('tipo_organizacion'),
-            'sector_trabajo' => $this->fetchSimpleCatalog('sector-trabajo'),
-            'categoria_ocupacional' => $this->fetchSimpleCatalog('categoria-ocupacional'),
-            'tipo_convivencia' => $this->fetchSimpleCatalog('tipo-convivencia'),
-            'tipo_vivienda' => $this->fetchSimpleCatalog('tipo-vivienda'),
-            'tenencia_vivienda' => $this->fetchSimpleCatalog('tenencia-vivienda'),
-            'frecuencia_servicio_agua' => $this->fetchSimpleCatalog('frecuencia-agua'),
-            'frecuencia_servicio_aseo' => $this->fetchSimpleCatalog('frecuencia-aseo'),
-            'frecuencia_servicio_electricidad' => $this->fetchSimpleCatalog('frecuencia-electricidad'),
-            'frecuencia_servicio_gas' => $this->fetchSimpleCatalog('frecuencia-gas'),
-            'transporte' => $this->fetchSimpleCatalog('transporte'),
-            'dependencia_economica' => $this->fetchSimpleCatalog('dependencia-economica'),
-            'fuente_ingreso_familiar' => $this->fetchSimpleCatalog('fuente-ingreso'),
-            'ingreso_familiar' => $this->fetchSimpleCatalog('ingreso-familiar'),
-            'nivel_educacion' => $this->fetchSimpleCatalog('nivel-educacion'),
-            'tipo_empresa' => $this->fetchSimpleCatalog('tipo-empresa'),
-            'veracidad' => $this->fetchSimpleCatalog('veracidad'),
-            'activo_vivienda' => $this->fetchSimpleCatalog('activo-vivienda'),
-            'ambiente_vivienda' => $this->fetchSimpleCatalog('ambiente-vivienda'),
-            'servicio_vivienda' => $this->fetchSimpleCatalog('servicio-vivienda'),
+            'instituto' => [],
+            'nacionalidad' => [],
+            'sexo' => [],
+            'tipo_estudiante' => [],
             'carrera' => [],
+            'semestre' => [],
+            'estado_civil' => [],
+            'condicion_laboral' => [],
+            'relacion_laboral' => [],
+            'tipo_organizacion' => [],
+            'sector_trabajo' => [],
+            'categoria_ocupacional' => [],
+            'tipo_convivencia' => [],
+            'tipo_vivienda' => [],
+            'tenencia_vivienda' => [],
+            'ambiente_vivienda' => [],
+            'activo_vivienda' => [],
+            'servicio_vivienda' => [],
+            'frecuencia_agua' => [],
+            'frecuencia_aseo' => [],
+            'frecuencia_electricidad' => [],
+            'frecuencia_gas' => [],
+            'transporte' => [],
+            'dependencia_economica' => [],
+            'fuente_ingreso' => [],
+            'ingreso_familiar' => [],
+            'nivel_educacion' => [],
+            'tipo_empresa' => [],
+            'veracidad' => [],
+            'tipo_beca' => [],
         ];
 
-        $carreraParams = [];
+        $institutoId = null;
         if (!empty($encuesta['instituto_id']) && is_numeric($encuesta['instituto_id'])) {
-            $carreraParams['instituto_id'] = (int)$encuesta['instituto_id'];
+            $institutoId = (int)$encuesta['instituto_id'];
         }
 
         try {
-            $carrerasResp = $this->catalogoService->catalogo('carrera', $carreraParams);
-            $carrerasPayload = isset($carrerasResp['data']) && is_array($carrerasResp['data']) ? $carrerasResp['data'] : null;
-            if (!empty($carrerasResp['success']) && $carrerasPayload) {
-                $carrerasData = (isset($carrerasPayload['success']) && array_key_exists('data', $carrerasPayload) && is_array($carrerasPayload['data']))
-                    ? $carrerasPayload['data']
-                    : $carrerasPayload;
-                if (is_array($carrerasData)) {
-                    $catalogs['carrera'] = $carrerasData;
+            $allResponse = $this->catalogoService->all(!empty($institutoId) ? ['instituto_id' => $institutoId] : []);
+            $payload = isset($allResponse['data']) && is_array($allResponse['data']) ? $allResponse['data'] : null;
+
+            if (!empty($allResponse['success']) && $payload) {
+                $allData = (isset($payload['success']) && array_key_exists('data', $payload) && is_array($payload['data']))
+                    ? $payload['data']
+                    : $payload;
+
+                if (is_array($allData)) {
+                    $catalogs = array_merge($catalogs, $allData);
+
+                    // Normalizamos alias para que la vista actual siga funcionando sin cambios.
+                    $catalogs['frecuencia_servicio_agua'] = $catalogs['frecuencia_agua'];
+                    $catalogs['frecuencia_servicio_aseo'] = $catalogs['frecuencia_aseo'];
+                    $catalogs['frecuencia_servicio_electricidad'] = $catalogs['frecuencia_electricidad'];
+                    $catalogs['frecuencia_servicio_gas'] = $catalogs['frecuencia_gas'];
+                    $catalogs['fuente_ingreso_familiar'] = $catalogs['fuente_ingreso'];
                 }
             }
         } catch (\Exception $e) {
-            $catalogs['carrera'] = [];
+            // Fallback silencioso: la vista sigue funcionando con catálogos vacíos.
+        }
+
+        try {
+            $institutoResponse = $this->catalogoService->catalogo('instituto');
+            $institutoPayload = isset($institutoResponse['data']) && is_array($institutoResponse['data']) ? $institutoResponse['data'] : null;
+
+            if (!empty($institutoResponse['success']) && $institutoPayload) {
+                $institutoData = (isset($institutoPayload['success']) && array_key_exists('data', $institutoPayload) && is_array($institutoPayload['data']))
+                    ? $institutoPayload['data']
+                    : $institutoPayload;
+
+                if (is_array($institutoData)) {
+                    $catalogs['instituto'] = $institutoData;
+                }
+            }
+        } catch (\Exception $e) {
+            $catalogs['instituto'] = [];
         }
 
         return $catalogs;

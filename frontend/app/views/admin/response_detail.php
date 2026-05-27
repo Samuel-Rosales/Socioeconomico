@@ -299,7 +299,6 @@
 
                     <?php $renderInput('discapacidad', 'Discapacidad', $getValue('discapacidad')); ?>
                     <?php $renderInput('enfermedad_cronica', 'Enfermedad Crónica', $getValue('enfermedad_cronica')); ?>
-                    <?php $renderInput('url_cedula', 'URL Cédula', $getValue('url_cedula'), 'text'); ?>
                     <?php $renderTextarea('direccion', 'Dirección', $getValue('direccion')); ?>
 
                     <?php $renderSelect('condicion_laboral_id', 'Condición Laboral', $getValue('condicion_laboral_id'), isset($catalogs['condicion_laboral']) && is_array($catalogs['condicion_laboral']) ? $catalogs['condicion_laboral'] : []); ?>
@@ -872,12 +871,9 @@
                             } else {
                                 $filename = basename(parse_url($urlCedula, PHP_URL_PATH) ?: $urlCedula);
                                 $proxyUrl = BASE_URL . '/admin/cedulas/' . rawurlencode($filename);
-                                $img = '<div class="space-y-3">'
-                                    . '<a class="text-primary2-600 hover:underline" href="' . htmlspecialchars($proxyUrl) . '" target="_blank" rel="noopener">Ver archivo</a>'
-                                    . '<div class="overflow-hidden rounded border border-gray-200 bg-white">'
-                                    . '<img src="' . htmlspecialchars($proxyUrl) . '" alt="Cédula de identidad" class="max-h-80 w-full object-contain">'
-                                    . '</div>'
-                                    . '</div>';
+                                $img = '<a href="' . htmlspecialchars($proxyUrl) . '" target="_blank" rel="noopener" class="block overflow-hidden rounded border border-gray-200 bg-white p-2">'
+                                    . '<img src="' . htmlspecialchars($proxyUrl) . '" alt="Cédula de identidad" class="mx-auto block max-h-96 w-auto max-w-full">'
+                                    . '</a>';
                                 echo $renderBox($img);
                             }
                         ?>
