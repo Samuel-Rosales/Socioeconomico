@@ -104,7 +104,7 @@ class Router
     private function matchPath($pattern, $path, &$params = [])
     {
         // Convertir el patrón con parámetros :param a una expresión regular
-        $regex = preg_replace('/\:([a-zA-Z0-9_]+)/', '(?P<$1>[a-zA-Z0-9_\-]+)', $pattern);
+        $regex = preg_replace('/\:([a-zA-Z0-9_]+)/', '(?P<$1>[^/]+)', $pattern);
         
         // Escapar barras
         $regex = str_replace('/', '\/', $regex);
