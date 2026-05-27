@@ -1,4 +1,4 @@
-<div class="container h-screen w-full flex items-center justify-center py-12">
+<div class="container h-screen w-full left-0 right-0 mx-auto flex items-center justify-center py-12">
     <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-8 text-center">
         <div class="mb-4">
             <svg class="mx-auto h-16 w-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
