@@ -202,9 +202,9 @@ class EncuestaService {
             'veracidad_id'                   => 'required|numeric',
             // En el formulario es opcional (puede ser "Ninguna")
             'tipo_beca_id'                   => 'numeric',
-            // En frontend se envía un archivo (cedula_file), no un URL.
-            // Dejamos url_cedula como opcional para no romper el flujo.
-            'url_cedula'                     => '',
+            // En frontend se envía un archivo (foto_cedula).
+            // El controlador sube el archivo y agrega url_cedula al request.
+            'url_cedula'                     => 'required',
         ]);
 
         // 2. Validamos
@@ -219,6 +219,9 @@ class EncuestaService {
             // Separamos los datos de la tabla principal de las relaciones (activos, servicios)
             $datosPrincipales = $this->limpiarDatos($requestData, $rules);
             $relaciones = $this->normalizarRelaciones($requestData);
+
+            // DEBUG
+            // error_log("[ENCUESTA SERVICE DEBUG] url_cedula en datosPrincipales: " . ($datosPrincipales['url_cedula'] ?? 'NULL'));
 
             $id = $this->model->guardarCompleta($datosPrincipales, $relaciones);
             return ['success' => true, 'id' => $id];

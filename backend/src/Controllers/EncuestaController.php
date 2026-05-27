@@ -22,7 +22,9 @@ class EncuestaController
             . DIRECTORY_SEPARATOR . 'uploads'
             . DIRECTORY_SEPARATOR . 'cedulas';
 
-        $this->uploadDir = (string) Env::get('UPLOAD_CEDULAS_DIR', $defaultUploadDir);
+        $this->uploadDir = (string) (Env::get('UPLOAD_CEDULAS_DIR') ?: $defaultUploadDir);
+
+        // error_log("[ENCUESTA DEBUG] uploadDir: " . $defaultUploadDir);
 
         $uploadPublicBase = (string) Env::get('UPLOAD_CEDULAS_PUBLIC_BASE');
         $uploadPublicBase = '/' . trim(str_replace('\\', '/', $uploadPublicBase), '/');
@@ -167,9 +169,19 @@ class EncuestaController
         $rawInput = file_get_contents('php://input');
         $requestData = json_decode($rawInput, true);
 
-        if (json_last_error() !== JSON_ERROR_NONE || empty($requestData)) {
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($requestData) || empty($requestData)) {
             $requestData = $_POST;
         }
+
+        if (!is_array($requestData)) {
+            $requestData = [];
+        }
+
+        // DEBUG: Verificar que campos vienen y si hay archivo
+        // error_log("[ENCUESTA DEBUG] Content-Type: " . ($_SERVER['CONTENT_TYPE'] ?? 'unknown'));
+        // error_log("[ENCUESTA DEBUG] requestData keys: " . implode(',', array_keys($requestData)));
+        // error_log("[ENCUESTA DEBUG] FILES keys: " . implode(',', array_keys($_FILES)));
+        // error_log("[ENCUESTA DEBUG] cedula en requestData: " . ($requestData['cedula'] ?? 'NO'));
 
         // Multi-tenant estricto: el instituto debe venir explícito.
         // Aceptamos: Header X-Instituto-Id / X-Tenant-Id, query ?instituto_id=, o body instituto_id.
@@ -198,6 +210,10 @@ class EncuestaController
 
         // 2. Procesar archivo de cédula (si fue enviado)
         $uploadResult = $this->handleCedulaUpload($requestData);
+        
+        // DEBUG
+        // error_log("[ENCUESTA DEBUG] uploadResult: " . json_encode($uploadResult));
+
         if (!$uploadResult['success']) {
             http_response_code(400);
             echo json_encode([
@@ -215,6 +231,9 @@ class EncuestaController
         if (!empty($uploadResult['url_cedula'])) {
             $requestData['url_cedula'] = $uploadResult['url_cedula'];
         }
+
+        // DEBUG
+        // error_log("[ENCUESTA DEBUG] Antes de llamar al servicio, requestData['url_cedula'] = " . ($requestData['url_cedula'] ?? 'NULL'));
 
         // 3. Llamar al servicio para registrar la encuesta
         $resultado = $this->encuestaService->registrarEncuesta($requestData);
