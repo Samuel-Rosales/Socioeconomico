@@ -126,6 +126,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (cedulaFile) {
         cedulaFile.addEventListener('change', function () {
             const file = this.files[0];
+            const cedulaFileLabel = document.querySelector('label[for="foto_cedula"].input-field');
+            if (cedulaFileLabel) {
+                cedulaFileLabel.classList.remove('border-red-500', 'ring-2', 'ring-red-500');
+            }
+            if (cedulaFileName) {
+                cedulaFileName.classList.remove('text-red-500');
+            }
+            this.setCustomValidity('');
             if (file) {
                 // Validar tamaño (5MB máximo)
                 const maxSize = 5 * 1024 * 1024; // 5MB en bytes
@@ -329,6 +337,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 telefonoEl.setCustomValidity('Seleccione un prefijo (0414/0416/0424/0426) o escriba el teléfono completo de 11 dígitos.');
             } else {
                 telefonoEl.setCustomValidity('');
+            }
+        }
+
+        // Validación explícita del archivo de cédula (input oculto)
+        const cedulaFileEl = stepElement.querySelector('#foto_cedula');
+        if (cedulaFileEl) {
+            const cedulaFileLabel = stepElement.querySelector('label[for="foto_cedula"].input-field');
+            const cedulaFileName = stepElement.querySelector('#foto_cedula_filename');
+            const hasFile = !!(cedulaFileEl.files && cedulaFileEl.files.length > 0);
+
+            if (!hasFile) {
+                cedulaFileEl.setCustomValidity('Debe seleccionar la foto de la cédula.');
+                if (cedulaFileLabel) {
+                    cedulaFileLabel.classList.add('border-red-500', 'ring-2', 'ring-red-500');
+                }
+                if (cedulaFileName) {
+                    cedulaFileName.classList.add('text-red-500');
+                }
+                isValid = false;
+                if (!firstInvalidInput) firstInvalidInput = cedulaFileEl;
+            } else {
+                cedulaFileEl.setCustomValidity('');
+                if (cedulaFileLabel) {
+                    cedulaFileLabel.classList.remove('border-red-500', 'ring-2', 'ring-red-500');
+                }
+                if (cedulaFileName) {
+                    cedulaFileName.classList.remove('text-red-500');
+                }
             }
         }
 
