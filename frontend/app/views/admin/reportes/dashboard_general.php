@@ -31,34 +31,34 @@ require __DIR__ . '/partials/estado.php';
 ?>
 
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-5">
-    <div class="bg-white rounded-lg shadow-sm border p-5">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-400  p-5">
         <p class="text-xs uppercase tracking-wide text-gray-500">Total encuestados</p>
         <h3 class="text-2xl font-bold text-gray-800 mt-1"><?php echo number_format($totalEncuestados, 0, ',', '.'); ?></h3>
     </div>
-    <div class="bg-white rounded-lg shadow-sm border p-6">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-400  p-6">
         <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Día con más encuestas</p>
         <h3 class="text-2xl font-bold text-gray-800"><?php echo number_format($diaMasEncuestasTotal, 0, ',', '.'); ?></h3>
         <p class="text-xs uppercase tracking-wide text-gray-500 mb-1"><?php echo htmlspecialchars($diaMasEncuestasFecha); ?></p>
     </div>
-    <div class="bg-white rounded-lg shadow-sm border p-5">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-400  p-5">
         <p class="text-xs uppercase tracking-wide text-gray-500">Tiempo promedio de respuesta</p>
         <h3 class="text-2xl font-bold text-green-700 mt-1"><?php echo number_format($tiempoPromedioRespuestaMinutos, 2, ',', '.'); ?> min</h3>
         <p class="text-xs text-gray-500 mt-1">Basado en <?php echo number_format($encuestasConTiempo, 0, ',', '.'); ?> encuestas</p>
     </div>
-    <div class="bg-white rounded-lg shadow-sm border p-5">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-400  p-5">
         <p class="text-xs uppercase tracking-wide text-gray-500">Moda de estrato</p>
         <h3 class="text-2xl font-bold text-indigo-700 mt-1"><?php echo "Estrato " . htmlspecialchars($modaEstrato); ?></h3>
     </div>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-    <div class="bg-white rounded-lg shadow-sm border p-5 lg:col-span-1">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-400  p-5 lg:col-span-1">
         <h3 class="text-lg font-semibold text-gray-800 mb-4">Distribución por sexo</h3>
         <div class="h-80 relative">
             <canvas id="chartSexo"></canvas>
         </div>
     </div>
-    <div class="bg-white rounded-lg shadow-sm border p-5 lg:col-span-2">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-400  p-5 lg:col-span-2">
         <h3 class="text-lg font-semibold text-gray-800 mb-4">Distribución por estrato</h3>
         <div class="h-80 relative">
             <canvas id="chartEstratos"></canvas>

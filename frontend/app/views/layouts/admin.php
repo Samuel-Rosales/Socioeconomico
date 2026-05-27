@@ -115,7 +115,7 @@
     ?>
     <!-- Sidebar -->
     <aside id="mobile-sidebar" class="bg-white w-64 h-screen text-gray-800 hidden md:grid md:grid-rows-[auto_1fr_auto] fixed inset-y-0 left-0 z-999 md:z-30 overflow-y-auto">
-        <a class="flex border-b justify-center h-24 w-full px-1.5 items-center @container"  href="<?php echo BASE_URL; ?>/">
+        <a class="flex border-b border-gray-400 justify-center h-24 w-full px-1.5 items-center @container"  href="<?php echo BASE_URL; ?>/">
             <?php include APP_PATH . '/views/components/logo.php'; ?>
         </a>
         <nav class="p-4 space-y-2">
@@ -168,7 +168,7 @@
             <?php endif; ?>
         </nav>
         <!-- Form para Logout -->
-        <form action="<?php echo BASE_URL; ?>/logout" method="POST" class="p-4 text-sm border-t mt-2">
+        <form action="<?php echo BASE_URL; ?>/logout" method="POST" class="p-4 text-sm border-t border-gray-400 mt-2">
             <button type="submit" class="text-red-500 hover:text-red-700 font-medium flex items-center gap-2 w-full">
                 <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
             </button>
@@ -181,7 +181,7 @@
     <!-- Main Content wrapper -->
     <main class="flex-1 flex flex-col h-screen overflow-hidden transition-all duration-300 md:ml-64">
         <!-- Top Navbar -->
-        <header class="bg-white shadow-sm flex items-center justify-between px-8 py-6 sticky top-0 z-20 shrink-0 transition-colors duration-300 h-24 border-b">
+        <header class="bg-white shadow-sm flex items-center justify-between px-8 py-6 sticky top-0 z-20 shrink-0 transition-colors duration-300 h-24 border-b border-gray-400" >
             <div class="flex items-center h-10">
                 <button id="mobile-menu-btn" class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none" aria-controls="mobile-sidebar" aria-expanded="false">
                     <i class="fas fa-bars text-xl"></i>

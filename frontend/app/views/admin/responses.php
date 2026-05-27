@@ -1,5 +1,5 @@
 <!-- Responses management -->
-<div class="bg-white rounded-lg shadow-sm border p-6">
+<div class="bg-white rounded-lg shadow-sm border border-gray-400  p-6">
     <div class="flex justify-between items-center mb-6">
         <h3 class="text-xl font-bold text-gray-800">Respuestas Recibidas</h3>
         <!-- <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm text-sm font-medium transition">
