@@ -13,7 +13,7 @@ $isSuperAdmin = !empty($is_super_admin);
 $action = isset($filtros_action) ? (string)$filtros_action : '';
 $viewKey = isset($report_view_key) ? (string)$report_view_key : '';
 ?>
-<div class="bg-white rounded-lg shadow-sm border p-5 mb-5">
+<div class="bg-white rounded-lg shadow-sm border border-gray-400  p-5 mb-5">
     <form method="GET" action="<?php echo htmlspecialchars($action); ?>" class="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
         <input type="hidden" name="view" value="<?php echo htmlspecialchars($viewKey); ?>" />
 
@@ -30,7 +30,7 @@ $viewKey = isset($report_view_key) ? (string)$report_view_key : '';
         <?php if ($isSuperAdmin): ?>
             <div>
                 <label class="block text-xs font-medium text-gray-600 mb-1">Instituto</label>
-                <select name="instituto_id" class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-200">
+                <select name="instituto_id" class="w-full border border-gray-400  rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-200">
                     <option value="">Todos</option>
                     <?php foreach ($institutos as $it):
                         $id = isset($it['id']) ? (int)$it['id'] : 0;
@@ -48,7 +48,7 @@ $viewKey = isset($report_view_key) ? (string)$report_view_key : '';
 
         <div>
             <label class="block text-xs font-medium text-gray-600 mb-1">Carrera</label>
-            <select name="carrera_id" class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-200">
+            <select name="carrera_id" class="w-full border border-gray-400  rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-200">
                 <option value="">Todas</option>
                 <?php foreach ($carreras as $ca):
                     $id = isset($ca['id']) ? (int)$ca['id'] : 0;

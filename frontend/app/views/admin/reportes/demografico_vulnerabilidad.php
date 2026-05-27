@@ -29,7 +29,7 @@ require __DIR__ . '/partials/estado.php';
 ?>
 
 <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
-    <div class="bg-white rounded-lg shadow-sm border p-5 overflow-x-auto">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-400  p-5 overflow-x-auto">
         <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-semibold text-gray-800">Cuadro Comparativo de Carreras por Estratos</h3>
             <span class="text-xs text-gray-500">Valores absolutos</span>
@@ -66,7 +66,7 @@ require __DIR__ . '/partials/estado.php';
         </table>
     </div>
 
-    <div class="bg-white rounded-lg shadow-sm border p-5 h-full flex flex-col">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-400  p-5 h-full flex flex-col">
         <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-semibold text-gray-800">Sexo por estrato</h3>
             <span class="text-xs text-gray-500">Barras agrupadas</span>
