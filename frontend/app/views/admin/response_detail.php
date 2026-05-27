@@ -338,9 +338,35 @@
 
                     <?php $renderSelect('veracidad_id', 'Veracidad', $getValue('veracidad_id'), isset($catalogs['veracidad']) && is_array($catalogs['veracidad']) ? $catalogs['veracidad'] : [], true); ?>
 
-                    <?php $renderMultiSelect('activos_vivienda', 'Activos de la Vivienda', isset($catalogs['activo_vivienda']) && is_array($catalogs['activo_vivienda']) ? $catalogs['activo_vivienda'] : [], $selectedActivos); ?>
-                    <?php $renderMultiSelect('ambientes_vivienda', 'Ambientes de la Vivienda', isset($catalogs['ambiente_vivienda']) && is_array($catalogs['ambiente_vivienda']) ? $catalogs['ambiente_vivienda'] : [], $selectedAmbientes); ?>
-                    <?php $renderMultiSelect('servicios_vivienda', 'Servicios de la Vivienda', isset($catalogs['servicio_vivienda']) && is_array($catalogs['servicio_vivienda']) ? $catalogs['servicio_vivienda'] : [], $selectedServicios); ?>
+                    <?php
+                    extract([
+                        'label' => 'Activos de la Vivienda',
+                        'name' => 'activos_vivienda[]',
+                        'options' => isset($catalogs['activo_vivienda']) && is_array($catalogs['activo_vivienda']) ? $catalogs['activo_vivienda'] : [],
+                        'oldData' => $selectedActivos,
+                    ]);
+                    include __DIR__ . '/../form/components/_checkbox_group.php';
+                    ?>
+
+                    <?php
+                    extract([
+                        'label' => 'Ambientes de la Vivienda',
+                        'name' => 'ambientes_vivienda[]',
+                        'options' => isset($catalogs['ambiente_vivienda']) && is_array($catalogs['ambiente_vivienda']) ? $catalogs['ambiente_vivienda'] : [],
+                        'oldData' => $selectedAmbientes,
+                    ]);
+                    include __DIR__ . '/../form/components/_checkbox_group.php';
+                    ?>
+
+                    <?php
+                    extract([
+                        'label' => 'Servicios de la Vivienda',
+                        'name' => 'servicios_vivienda[]',
+                        'options' => isset($catalogs['servicio_vivienda']) && is_array($catalogs['servicio_vivienda']) ? $catalogs['servicio_vivienda'] : [],
+                        'oldData' => $selectedServicios,
+                    ]);
+                    include __DIR__ . '/../form/components/_checkbox_group.php';
+                    ?>
                 </div>
 
                 <div class="mt-6 flex items-center gap-3">
