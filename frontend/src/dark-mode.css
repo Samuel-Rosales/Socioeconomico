@@ -245,7 +245,7 @@
 }
 
 .dark .selec-darck-inten {
-  background-color: var(--color-primary2-400);
+  background-color: var(--color-primary2-600);
   color: rgb(248 250 252);
 }
 
