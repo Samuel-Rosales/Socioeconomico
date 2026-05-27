@@ -111,7 +111,7 @@
         </div>
 
         <div>
-            <label for="frecuencia_aseo_id" class="label-field">Frecuencia Servicio de Aseo</label>
+            <label for="frecuencia_aseo_id" class="label-field">Frecuencia Servicio de Aseo <span class="text-primary2-500">*</span><</label>
             <select id="frecuencia_aseo_id" name="frecuencia_aseo_id" class="input-field" required>
                 <option value="">Seleccione...</option>
                 <?php if (isset($catalogos['frecuencia_aseo'])): ?>
