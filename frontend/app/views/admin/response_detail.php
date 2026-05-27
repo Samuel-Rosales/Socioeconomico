@@ -267,10 +267,10 @@
         </div>
 
         <?php if (!empty($isSuperAdmin) && !empty($editMode) && !empty($encuesta['id'])): ?>
-            <form method="POST" action="<?php echo BASE_URL; ?>/admin/respuestas/<?php echo (int)$encuesta['id']; ?>/update" class="border border-blue-200 rounded-lg p-6 mb-6 bg-blue-50/40">
+            <form method="POST" action="<?php echo BASE_URL; ?>/admin/respuestas/<?php echo (int)$encuesta['id']; ?>/update" class="rounded-lg p-6 mb-6 border">
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-bold text-blue-900">Editar Respuesta</h2>
-                    <div class="text-xs text-blue-800">Campos de fecha de creación/inicio no son editables.</div>
+                    <h2 class="text-xl font-bold text-gray-700">Editar Respuesta</h2>
+                    <div class="text-xs text-gray-700">Campos de fecha de creación/inicio no son editables.</div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
