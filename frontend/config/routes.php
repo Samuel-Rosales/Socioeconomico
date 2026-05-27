@@ -32,6 +32,7 @@ $router->get('/admin/reportes/demografico-vulnerabilidad', 'ReportesController@d
 $router->get('/admin/usuarios', 'AdminController@users');
 $router->get('/admin/respuestas', 'AdminController@responses');
 $router->get('/admin/respuestas/:id', 'AdminController@responseDetail');
+$router->get('/admin/cedulas/:filename', 'AdminController@cedulaFile');
 $router->post('/admin/respuestas/:id/update', 'AdminController@responseUpdate');
 $router->get('/admin/catalogos', 'AdminController@catalogs');
 
