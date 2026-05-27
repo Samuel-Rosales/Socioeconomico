@@ -100,6 +100,78 @@ class AdminController extends Controller
         exit;
     }
 
+    public function cedulaFile($filename)
+    {
+        $this->checkAuth();
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $filename = is_array($filename) && isset($filename['filename']) ? (string)$filename['filename'] : (string)$filename;
+        $filename = basename(trim($filename));
+
+        if ($filename === '' || !preg_match('/^[A-Za-z0-9._-]+\.(jpe?g|png|webp)$/i', $filename)) {
+            http_response_code(400);
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'message' => 'Archivo inválido.',
+            ]);
+            return;
+        }
+
+        $token = isset($_SESSION['auth_token']) ? (string)$_SESSION['auth_token'] : '';
+        if (trim($token) === '') {
+            $this->redirect(BASE_URL . '/login');
+            return;
+        }
+
+        $backendUrl = rtrim((string)API_BASE_URL, '/') . '/cedulas/' . rawurlencode($filename);
+        $ch = curl_init($backendUrl);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Authorization: Bearer ' . $token,
+        ]);
+
+        $body = curl_exec($ch);
+        $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $contentType = (string) curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+        $error = curl_error($ch);
+        curl_close($ch);
+
+        if ($error) {
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error al obtener la imagen.',
+            ]);
+            return;
+        }
+
+        if ($httpCode !== 200) {
+            http_response_code($httpCode ?: 500);
+            if (is_string($body) && trim($body) !== '') {
+                header('Content-Type: application/json');
+                echo $body;
+            }
+            return;
+        }
+
+        http_response_code(200);
+        if ($contentType !== '') {
+            header('Content-Type: ' . $contentType);
+        }
+        header('Cache-Control: private, max-age=300');
+        header('X-Content-Type-Options: nosniff');
+        echo $body;
+        exit;
+    }
+
     private function requireSuperAdmin()
     {
         $rol = $this->actorRolCodigo();
@@ -740,9 +812,9 @@ class AdminController extends Controller
             }
 
             if ($isSuperAdmin && $encuesta !== null) {
-                $editCatalogs = $this->buildEncuestaEditCatalogs($encuesta);
-            }
+            $editCatalogs = $this->buildEncuestaEditCatalogs($encuesta);
         }
+    }
 
         $this->view('admin/response_detail', [
             'title' => 'Detalle de Encuesta | Admin',

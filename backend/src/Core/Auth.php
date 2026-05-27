@@ -6,7 +6,7 @@ use App\Models\UsuarioModel;
 
 class Auth
 {
-    public static function requireAuth(array $allowedRoles)
+    public static function requireAuth(?array $allowedRoles = null)
     {
         $token = self::getBearerToken();
         if (empty($token)) {
@@ -34,7 +34,7 @@ class Auth
         $rolCodigo = $payload['rol'] ?? ($usuario['rol_codigo'] ?? null);
         $rolNombre = $payload['rol_nombre'] ?? ($usuario['rol_nombre'] ?? null);
 
-        if ($allowedRoles !== null && (!is_string($rolCodigo) || !in_array($rolCodigo, $allowedRoles, true))) {
+        if (is_array($allowedRoles) && !empty($allowedRoles) && (!is_string($rolCodigo) || !in_array($rolCodigo, $allowedRoles, true))) {
             self::fail(403, 'No autorizado', ['auth' => ['No tienes permisos para esta acción.']]);
         }
 

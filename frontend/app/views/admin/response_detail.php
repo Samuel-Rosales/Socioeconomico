@@ -870,19 +870,15 @@
                             if ($urlCedula === '') {
                                 echo $renderBox('<span class="text-gray-400">-</span>');
                             } else {
-                                $isSafeUrl = false;
-                                if (preg_match('/^https?:\/\//i', $urlCedula)) {
-                                    $isSafeUrl = true;
-                                } elseif (substr($urlCedula, 0, 1) === '/') {
-                                    $isSafeUrl = true;
-                                }
-
-                                if ($isSafeUrl) {
-                                    $href = htmlspecialchars($urlCedula);
-                                    echo $renderBox('<a class="text-primary2-600 hover:underline" href="' . $href . '" target="_blank" rel="noopener">Ver archivo</a>');
-                                } else {
-                                    echo $renderBox($renderScalar($urlCedula));
-                                }
+                                $filename = basename(parse_url($urlCedula, PHP_URL_PATH) ?: $urlCedula);
+                                $proxyUrl = BASE_URL . '/admin/cedulas/' . rawurlencode($filename);
+                                $img = '<div class="space-y-3">'
+                                    . '<a class="text-primary2-600 hover:underline" href="' . htmlspecialchars($proxyUrl) . '" target="_blank" rel="noopener">Ver archivo</a>'
+                                    . '<div class="overflow-hidden rounded border border-gray-200 bg-white">'
+                                    . '<img src="' . htmlspecialchars($proxyUrl) . '" alt="Cédula de identidad" class="max-h-80 w-full object-contain">'
+                                    . '</div>'
+                                    . '</div>';
+                                echo $renderBox($img);
                             }
                         ?>
                     </div>

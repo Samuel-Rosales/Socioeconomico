@@ -49,6 +49,9 @@ $router->post('/encuesta', 'App\Controllers\EncuestaController@registrar');
 // Ruta para validar duplicados (GET) - sin auth (para estudiantes sin usuario)
 $router->get('/encuesta/check', 'App\Controllers\EncuestaController@checkDuplicados');
 
+// Archivo protegido de cédulas (requiere token)
+$router->get('/cedulas/:filename', 'App\Controllers\ArchivoController@serveCedula');
+
 // Ruta para listar encuestas (GET) - resumen + estrato
 $router->get('/encuesta', 'App\Controllers\EncuestaController@index');
 
