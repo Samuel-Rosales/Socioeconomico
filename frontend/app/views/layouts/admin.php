@@ -116,7 +116,7 @@ if ($cssVersion !== null) {
     $isReportesSection = ($current_page === 'reportes' || strpos($current_page, 'reportes_') === 0);
     ?>
     <!-- Sidebar -->
-    <aside id="mobile-sidebar" class="bg-white w-64 h-screen text-gray-800 hidden md:grid md:grid-rows-[auto_1fr_auto] fixed inset-y-0 left-0 z-999 md:z-30 overflow-y-auto">
+    <aside id="mobile-sidebar" class="bg-white w-64 h-screen text-gray-800 hidden grid grid-rows-[auto_1fr_auto]  md:grid md:grid-rows-[auto_1fr_auto] fixed inset-y-0 left-0 z-999 md:z-30 overflow-y-auto">
         <a class="flex border-b border-gray-400 justify-center h-24 w-full px-1.5 items-center @container" href="<?php echo BASE_URL; ?>/">
             <?php include APP_PATH . '/views/components/logo.php'; ?>
         </a>
@@ -199,7 +199,7 @@ if ($cssVersion !== null) {
                         'reportes_demografico_vulnerabilidad' => 'Reportes · Perfil Socioeconómico por Carreras',
                         'users' => 'Gestión de Usuarios',
                         'responses' => 'Respuestas Recibidas',
-                        'catalogs' => 'Configuración de Opciones para las Encuestas'
+                        'catalogs' => 'Configuración de Encuestas'
                     ];
                     echo isset($titles[$current_page]) ? $titles[$current_page] : 'Administración';
                     ?>
