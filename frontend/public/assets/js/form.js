@@ -131,7 +131,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 cedulaFileLabel.classList.remove('border-red-500', 'ring-2', 'ring-red-500');
             }
             if (cedulaFileName) {
-                cedulaFileName.classList.remove('text-red-500');
+                cedulaFileName.classList.remove('text-red-500', 'dark:text-red-400');
+                cedulaFileName.classList.add('text-gray-500', 'dark:text-slate-300');
             }
             this.setCustomValidity('');
             if (file) {
@@ -142,6 +143,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     this.value = '';
                     if (cedulaFileName) {
                         cedulaFileName.textContent = 'Ningún archivo seleccionado';
+                        cedulaFileName.classList.remove('text-red-500', 'dark:text-red-400');
+                        cedulaFileName.classList.add('text-gray-500', 'dark:text-slate-300');
                     }
                     return;
                 }
@@ -153,15 +156,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     this.value = '';
                     if (cedulaFileName) {
                         cedulaFileName.textContent = 'Ningún archivo seleccionado';
+                        cedulaFileName.classList.remove('text-red-500', 'dark:text-red-400');
+                        cedulaFileName.classList.add('text-gray-500', 'dark:text-slate-300');
                     }
                     return;
                 }
 
                 if (cedulaFileName) {
                     cedulaFileName.textContent = file.name;
+                    cedulaFileName.classList.remove('text-red-500', 'dark:text-red-400');
+                    cedulaFileName.classList.add('text-gray-500', 'dark:text-slate-300');
                 }
             } else if (cedulaFileName) {
                 cedulaFileName.textContent = 'Ningún archivo seleccionado';
+                cedulaFileName.classList.remove('text-red-500', 'dark:text-red-400');
+                cedulaFileName.classList.add('text-gray-500', 'dark:text-slate-300');
             }
         });
     }
@@ -344,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const cedulaFileEl = stepElement.querySelector('#foto_cedula');
         if (cedulaFileEl) {
             const cedulaFileLabel = stepElement.querySelector('label[for="foto_cedula"].input-field');
-            const cedulaFileName = stepElement.querySelector('#foto_cedula_filename');
+            const cedulaFileName = stepElement.querySelector('#foto_cedula_filename') || document.getElementById('foto_cedula_filename');
             const hasFile = !!(cedulaFileEl.files && cedulaFileEl.files.length > 0);
 
             if (!hasFile) {
@@ -353,17 +362,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     cedulaFileLabel.classList.add('border-red-500', 'ring-2', 'ring-red-500');
                 }
                 if (cedulaFileName) {
-                    cedulaFileName.classList.add('text-red-500');
+                    cedulaFileName.textContent = 'Debe seleccionar la foto de la cédula.';
+                    cedulaFileName.classList.remove('text-gray-500', 'dark:text-slate-300');
+                    cedulaFileName.classList.add('text-red-500', 'dark:text-red-400');
                 }
                 isValid = false;
                 if (!firstInvalidInput) firstInvalidInput = cedulaFileEl;
             } else {
+                const selectedFile = cedulaFileEl.files[0];
                 cedulaFileEl.setCustomValidity('');
                 if (cedulaFileLabel) {
                     cedulaFileLabel.classList.remove('border-red-500', 'ring-2', 'ring-red-500');
                 }
                 if (cedulaFileName) {
-                    cedulaFileName.classList.remove('text-red-500');
+                    cedulaFileName.textContent = selectedFile ? selectedFile.name : 'Ningún archivo seleccionado';
+                    cedulaFileName.classList.remove('text-red-500', 'dark:text-red-400');
+                    cedulaFileName.classList.add('text-gray-500', 'dark:text-slate-300');
                 }
             }
         }
