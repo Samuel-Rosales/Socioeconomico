@@ -94,7 +94,7 @@
             <thead>
                 <tr class="bg-gray-50 text-gray-600 border-y">
                     <th class="py-3 px-4 font-semibold text-sm">Nombre</th>
-                    <th class="py-3 px-4 font-semibold text-sm">Cédula</th>
+                    <th class="py-3 px-4 font-semibold text-sm">Usuario</th>
                     <th class="py-3 px-4 font-semibold text-sm">Rol</th>
                     <th class="py-3 px-4 font-semibold text-sm">Instituto</th>
                     <th class="py-3 px-4 font-semibold text-sm">Fecha Registro</th>
@@ -214,7 +214,7 @@
             <form id="user-form" method="POST" action="<?php echo BASE_URL; ?>/admin/usuarios/create" class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Cédula</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
                         <input name="ci" id="user-ci" type="text" class=" border border-gray-400 rounded-md p-2 w-full focus:ring-primary-500 focus:border border-gray-400-primary-500 outline-none" required>
                     </div>
                     <div>

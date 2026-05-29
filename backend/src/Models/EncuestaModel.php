@@ -356,10 +356,6 @@ class EncuestaModel extends BaseModel {
     }
 
     private function guardarRelaciones($encuestaId, array $relaciones) {
-        // DEBUG: Verificar qué recibe guardarRelaciones
-        error_log("[BACKEND MODEL DEBUG] guardarRelaciones() - encuestaId: " . $encuestaId);
-        error_log("[BACKEND MODEL DEBUG] guardarRelaciones() - relaciones: " . json_encode($relaciones, JSON_UNESCAPED_UNICODE));
-
         // Relación: Activos de Vivienda
         if (!empty($relaciones['activos'])) {
             foreach ($relaciones['activos'] as $activoId) {
