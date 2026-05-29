@@ -253,7 +253,7 @@
                 ?>
             </div>
             <div class="text-sm text-gray-700 mt-1">
-                Fecha: <?php echo !empty($encuesta['creado']) ? htmlspecialchars((string)$encuesta['creado']) : '-'; ?>
+                Fecha: <?php echo !empty($encuesta['creado']) ? htmlspecialchars(formatFechaUTC((string)$encuesta['creado'])) : '-'; ?>
             </div>
             <div class="text-sm text-gray-700 mt-1">
                 Estrato: <?php

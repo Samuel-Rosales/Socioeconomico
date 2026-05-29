@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const surveyStartDateInput = document.getElementById('survey-start-date');
             if (surveyStartDateInput && !surveyStartDateInput.value) {
-                surveyStartDateInput.value = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                surveyStartDateInput.value = new Date().toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, '');
             }
 
             const activeStep = document.querySelector('.form-step:not(.hidden)');

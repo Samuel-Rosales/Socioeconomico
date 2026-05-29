@@ -26,6 +26,7 @@ class Database {
                     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 ]);
+                self::$instance->exec("SET time_zone = '+00:00'");
             } catch (PDOException $e) {
                 // En contexto web respondemos JSON estándar para no romper consumidores.
                 if (PHP_SAPI !== 'cli') {
