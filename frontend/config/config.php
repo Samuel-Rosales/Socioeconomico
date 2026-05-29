@@ -34,8 +34,17 @@ define('APP_PATH', ROOT_PATH . '/app');
 define('PUBLIC_PATH', ROOT_PATH . '/public');
 define('CONFIG_PATH', ROOT_PATH . '/config');
 
-// Base URL para redirecciones y assets (ej: /FRONTEND-SOCIOECONOMICO)
-define('BASE_URL', getenv('BASE_URL') ?: 'http://localhost:8080');
+// Base URL para redirecciones y assets (auto-detecta dominio si no está en .env)
+function _detectBaseUrl(): string
+{
+    $proto = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '/');
+    $publicPos = strpos($script, '/public/');
+    $basePath = $publicPos !== false ? substr($script, 0, $publicPos) : rtrim(dirname($script), '/');
+    return $proto . '://' . $host . $basePath;
+}
+define('BASE_URL', getenv('BASE_URL') ?: _detectBaseUrl());
 
 // Configuración de la aplicación
 define('APP_NAME', getenv('APP_NAME') ?: 'Formulario Socioeconómico');

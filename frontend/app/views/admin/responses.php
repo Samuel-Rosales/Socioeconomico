@@ -143,7 +143,7 @@
                                 <?php endif; ?>
                             </td>
                             <td class="py-3 px-4 text-right">
-                                <a class="text-indigo-500 hover:text-indigo-700 dark:hover:text-indigo-400 mx-1" href="<?php echo BASE_URL; ?>/admin/respuestas/<?php echo $id; ?>" title="Ver Detalles"><i class="fas fa-eye"></i></a>
+                                <a class="text-indigo-500 hover:text-indigo-700 mx-1" href="<?php echo BASE_URL; ?>/admin/respuestas/<?php echo $id; ?>" title="Ver Detalles"><i class="fas fa-eye"></i></a>
                                 <!--    <button class="text-blue-500 hover:text-blue-700 mx-1" title="Editar"><i class="fas fa-edit"></i></button> -->
                             </td>
                         </tr>
@@ -164,7 +164,7 @@
             <?php if ($page <= 1): ?>
                 <span class="px-3 py-1 border rounded opacity-50 cursor-not-allowed">Anterior</span>
             <?php else: ?>
-                <a class="px-3 py-1 border rounded hover:bg-gray-50 dark:hover:bg-zinc-700" href="<?php echo htmlspecialchars($buildUrl(['page' => $page - 1])); ?>">Anterior</a>
+                <a class="px-3 py-1 border rounded hover:bg-gray-50" href="<?php echo htmlspecialchars($buildUrl(['page' => $page - 1])); ?>">Anterior</a>
             <?php endif; ?>
 
             <?php
@@ -185,7 +185,7 @@
                 <?php if ($p === $page): ?>
                     <span class="px-3 py-1 bg-primary-50 text-primary-600 border border-primary-200 rounded"><?php echo $p; ?></span>
                 <?php else: ?>
-                    <a class="px-3 py-1 border rounded hover:bg-gray-50 dark:hover:bg-zinc-700" href="<?php echo htmlspecialchars($buildUrl(['page' => $p])); ?>"><?php echo $p; ?></a>
+                    <a class="px-3 py-1 border rounded hover:bg-gray-50" href="<?php echo htmlspecialchars($buildUrl(['page' => $p])); ?>"><?php echo $p; ?></a>
                 <?php endif; ?>
 
                 <?php $last = $p; ?>
@@ -194,7 +194,7 @@
             <?php if ($page >= $totalPages): ?>
                 <span class="px-3 py-1 border rounded opacity-50 cursor-not-allowed">Siguiente</span>
             <?php else: ?>
-                <a class="px-3 py-1 border rounded hover:bg-gray-50 dark:hover:bg-zinc-700" href="<?php echo htmlspecialchars($buildUrl(['page' => $page + 1])); ?>">Siguiente</a>
+                <a class="px-3 py-1 border rounded hover:bg-gray-50" href="<?php echo htmlspecialchars($buildUrl(['page' => $page + 1])); ?>">Siguiente</a>
             <?php endif; ?>
         </div>
     </div>
