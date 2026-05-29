@@ -45,7 +45,7 @@
         setStartDate();
         closeModal();
 
-        var firstField = qs('#cedula');
+        var firstField = qs('#nombres');
         if (firstField) {
           firstField.focus();
         }
