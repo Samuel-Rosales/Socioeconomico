@@ -39,7 +39,6 @@ function _detectBaseUrl(): string
 {
     $proto = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '/');
     return $proto . '://' . $host . "/Socioeconomico/frontend/public";
 }
 define('BASE_URL', getenv('BASE_URL') ?: _detectBaseUrl());
