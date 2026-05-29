@@ -93,6 +93,29 @@ class ApiService
     }
 
     /**
+     * Aplana arrays anidados para que cURL los envíe correctamente en multipart/form-data
+     * 
+     * Convierte: ['ambientes_vivienda' => ['1', '2', '3']]
+     * A: ['ambientes_vivienda[0]' => '1', 'ambientes_vivienda[1]' => '2', 'ambientes_vivienda[2]' => '3']
+     */
+    private function flattenArraysForMultipart(array $data): array
+    {
+        $flattened = [];
+        
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $index => $item) {
+                    $flattened["{$key}[{$index}]"] = $item;
+                }
+            } else {
+                $flattened[$key] = $value;
+            }
+        }
+        
+        return $flattened;
+    }
+
+    /**
      * Realiza una petición PUT
      * 
      * @param string $endpoint Endpoint de la API
@@ -214,6 +237,9 @@ class ApiService
         // Si hay datos, enviarlos como JSON o multipart según corresponda.
         if ($data !== null && in_array($method, ['POST', 'PUT', 'PATCH'])) {
             if ($isMultipart) {
+                // IMPORTANTE: cURL no maneja bien arrays anidados en multipart
+                // Necesitamos aplanarlos: ['field' => ['a', 'b']] -> ['field[0]' => 'a', 'field[1]' => 'b']
+                $data = $this->flattenArraysForMultipart($data);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
             } else {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));

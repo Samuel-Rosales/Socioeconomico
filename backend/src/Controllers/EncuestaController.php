@@ -173,6 +173,12 @@ class EncuestaController
             $requestData = $_POST;
         }
 
+        // DEBUG: Verificar qué llega al backend
+        error_log("[BACKEND CONTROLLER DEBUG] requestData keys: " . implode(', ', array_keys($requestData)));
+        error_log("[BACKEND CONTROLLER DEBUG] ambientes_vivienda: " . json_encode($requestData['ambientes_vivienda'] ?? 'NO_SET'));
+        error_log("[BACKEND CONTROLLER DEBUG] activos_vivienda: " . json_encode($requestData['activos_vivienda'] ?? 'NO_SET'));
+        error_log("[BACKEND CONTROLLER DEBUG] servicios_vivienda: " . json_encode($requestData['servicios_vivienda'] ?? 'NO_SET'));
+
         if (!is_array($requestData)) {
             $requestData = [];
         }
