@@ -1,6 +1,8 @@
 <?php
 // public/index.php
 
+date_default_timezone_set('UTC');
+
 // Headers CORS para permitir peticiones desde el frontend
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');

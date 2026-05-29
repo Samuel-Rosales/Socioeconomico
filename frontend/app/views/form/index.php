@@ -185,7 +185,7 @@
 
 <!-- JavaScript para interactividad -->
 <script src="<?php echo BASE_URL; ?>/assets/js/custom-alerts.js"></script>
-<script src="<?php echo BASE_URL; ?>/assets/js/form.js"></script>
+<script src="<?php echo BASE_URL; ?>/assets/js/form.js?v=<?php echo @filemtime(PUBLIC_PATH . '/assets/js/form.js') ?: ''; ?>"></script>
+<script src="<?php echo BASE_URL; ?>/assets/js/init-form.js?v=<?php echo @filemtime(PUBLIC_PATH . '/assets/js/init-form.js') ?: ''; ?>"></script>
 <script src="<?php echo BASE_URL; ?>/assets/js/empleo.js"></script>
 <script src="<?php echo BASE_URL; ?>/assets/js/familia.js"></script>
-<script src="<?php echo BASE_URL; ?>/assets/js/init-form.js"></script>

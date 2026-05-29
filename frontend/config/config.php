@@ -60,3 +60,22 @@ define('SEDE_INSTITUTO_MAP', getenv('SEDE_INSTITUTO_MAP') ? json_decode(getenv('
 // Otras constantes
 define('SITE_URL', getenv('SITE_URL') ?: 'http://localhost');
 define('SITE_NAME', getenv('SITE_NAME') ?: 'Formulario Socioeconómico');
+
+/**
+ * Convierte una fecha/hora UTC a America/Caracas y la formatea para mostrar.
+ * Si el valor ya está formateado (contiene texto no numérico), lo devuelve tal cual.
+ */
+function formatFechaUTC($value, $format = 'd M Y, h:i A')
+{
+    if (!is_string($value) || trim($value) === '') {
+        return $value;
+    }
+
+    try {
+        $dt = new DateTime($value, new DateTimeZone('UTC'));
+        $dt->setTimezone(new DateTimeZone('America/Caracas'));
+        return $dt->format($format);
+    } catch (Exception $e) {
+        return $value;
+    }
+}
