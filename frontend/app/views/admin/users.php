@@ -151,7 +151,7 @@
                             <td class="py-3 px-4 text-right">
                                 <button
                                     type="button"
-                                    class="text-blue-500 hover:text-blue-700 mx-1 js-edit-user"
+                                    class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 mx-1 js-edit-user"
                                     title="Editar"
                                     data-id="<?php echo (int)$id; ?>"
                                     data-ci="<?php echo htmlspecialchars($ci, ENT_QUOTES); ?>"
@@ -162,7 +162,7 @@
                                 ><i class="fas fa-edit"></i></button>
 
                                 <form class="inline" method="POST" action="<?php echo BASE_URL; ?>/admin/usuarios/delete/<?php echo (int)$id; ?>" onsubmit="return confirm('¿Eliminar este usuario?');">
-                                    <button type="submit" class="text-red-500 hover:text-red-700 mx-1" title="Eliminar">
+                                    <button type="submit" class="text-red-500 hover:text-red-700 dark:hover:text-red-400 mx-1" title="Eliminar">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -185,14 +185,14 @@
         <span>Mostrando <?php echo (int)$from; ?> a <?php echo (int)$to; ?> de <?php echo (int)$total; ?> entradas</span>
         <div class="flex gap-1">
             <a
-                class="px-3 py-1 border rounded hover:bg-gray-50 <?php echo $prevDisabled ? 'pointer-events-none opacity-50' : ''; ?>"
+                class="px-3 py-1 border rounded hover:bg-gray-50 dark:hover:bg-zinc-700 <?php echo $prevDisabled ? 'pointer-events-none opacity-50' : ''; ?>"
                 href="<?php echo BASE_URL; ?>/admin/usuarios?<?php echo htmlspecialchars($buildQuery(['page' => max(1, $page - 1)])); ?>"
             >Anterior</a>
 
             <span class="px-3 py-1 bg-primary-50 text-primary-600 border border-primary-200 rounded"><?php echo (int)$page; ?></span>
 
             <a
-                class="px-3 py-1 border border-gray-400 rounded hover:bg-gray-50 <?php echo $nextDisabled ? 'pointer-events-none opacity-50' : ''; ?>"
+                class="px-3 py-1 border border-gray-400 dark:border-zinc-600 rounded hover:bg-gray-50 dark:hover:bg-zinc-700 <?php echo $nextDisabled ? 'pointer-events-none opacity-50' : ''; ?>"
                 href="<?php echo BASE_URL; ?>/admin/usuarios?<?php echo htmlspecialchars($buildQuery(['page' => min($totalPages, $page + 1)])); ?>"
             >Siguiente</a>
         </div>
@@ -206,7 +206,7 @@
         <div class="bg-white rounded-lg shadow-sm border border-gray-400">
             <div class="flex items-center justify-between px-6 py-4 border-b border-gray-400">
                 <h4 id="user-modal-title" class="text-lg font-semibold text-gray-800">Nuevo Usuario</h4>
-                <button type="button" class="text-gray-500 hover:text-gray-700" data-modal-close>
+                <button type="button" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" data-modal-close>
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -276,7 +276,7 @@
                 </div>
 
                 <div class="mt-6 flex justify-end gap-2">
-                    <button type="button" class="px-4 py-2 rounded border border-gray-400 text-gray-700 hover:bg-gray-50" data-modal-close>Cancelar</button>
+                    <button type="button" class="px-4 py-2 rounded border border-gray-400 dark:border-zinc-600 text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-700" data-modal-close>Cancelar</button>
                     <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded shadow-sm text-sm font-medium transition">Guardar</button>
                 </div>
             </form>

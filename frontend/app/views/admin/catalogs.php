@@ -121,7 +121,7 @@ $assetBase = BASE_URL . '/assets';
 
                     $btnClass = $isActive
                         ? 'bg-primary2-50 text-primary2-600 font-medium selec-darck-inten '
-                        : 'text-gray-700 hover:bg-gray-100 ';
+                        : 'text-gray-700 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-700 ';
                     ?>
                     <li class="catalog-category-item" data-label="<?php echo htmlspecialchars(mb_strtolower($itemLabel, 'UTF-8'), ENT_QUOTES); ?>">
                         <a href="<?php echo htmlspecialchars($buildCatalogUrl($itemResource)); ?>" class="block w-full text-left px-3 py-2 rounded-md <?php echo $btnClass; ?>">
@@ -261,7 +261,7 @@ $assetBase = BASE_URL . '/assets';
                             <td class="py-3 px-4 text-right">
                                 <button
                                     type="button"
-                                    class="text-blue-500 hover:text-blue-700 mx-1 js-edit-catalog-item"
+                                    class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 mx-1 js-edit-catalog-item"
                                     title="Editar"
                                     data-id="<?php echo (int)$id; ?>"
                                     <?php if ($resource === 'carrera'): ?>
@@ -283,7 +283,7 @@ $assetBase = BASE_URL . '/assets';
                                         <?php if ($currentTenantScoped && !empty($institutoId)): ?>
                                             <input type="hidden" name="instituto_id" value="<?php echo (int)$institutoId; ?>">
                                         <?php endif; ?>
-                                        <button class="text-red-500 hover:text-red-700 mx-1" type="submit" title="Desactivar" onclick="return confirm('¿Desactivar este registro?');">
+                                        <button class="text-red-500 hover:text-red-700 dark:hover:text-red-400 mx-1" type="submit" title="Desactivar" onclick="return confirm('¿Desactivar este registro?');">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
@@ -293,7 +293,7 @@ $assetBase = BASE_URL . '/assets';
                                         <?php if ($currentTenantScoped && !empty($institutoId)): ?>
                                             <input type="hidden" name="instituto_id" value="<?php echo (int)$institutoId; ?>">
                                         <?php endif; ?>
-                                        <button class="text-green-600 hover:text-green-800 mx-1" type="submit" title="Restaurar" onclick="return confirm('¿Restaurar este registro?');">
+                                        <button class="text-green-600 hover:text-green-800 dark:hover:text-green-400 mx-1" type="submit" title="Restaurar" onclick="return confirm('¿Restaurar este registro?');">
                                             <i class="fas fa-undo"></i>
                                         </button>
                                     </form>
@@ -318,7 +318,7 @@ $assetBase = BASE_URL . '/assets';
         <div class="bg-white rounded-lg shadow-sm border">
             <div class="flex items-center justify-between px-6 py-4 border-b">
                 <h4 id="catalog-item-modal-title" class="text-lg font-semibold text-gray-800">Nueva Opción</h4>
-                <button type="button" class="text-gray-500 hover:text-gray-700" data-modal-close>
+                <button type="button" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" data-modal-close>
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -381,7 +381,7 @@ $assetBase = BASE_URL . '/assets';
                 <?php endif; ?>
 
                 <div class="mt-6 flex justify-end gap-2">
-                    <button type="button" class="px-4 py-2 rounded border text-gray-700 hover:bg-gray-50" data-modal-close>Cancelar</button>
+                    <button type="button" class="px-4 py-2 rounded border border-gray-400 dark:border-zinc-600 text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-700" data-modal-close>Cancelar</button>
                     <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded shadow-sm text-sm font-medium transition">Guardar</button>
                 </div>
             </form>

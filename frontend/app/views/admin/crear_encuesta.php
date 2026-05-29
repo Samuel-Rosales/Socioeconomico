@@ -1,7 +1,7 @@
 <div class="bg-white rounded-lg shadow-sm border border-gray-400 p-6">
     <div class="flex justify-between items-center mb-6">
         <h3 class="text-xl font-bold text-gray-800">Nueva Encuesta</h3>
-        <a href="<?php echo BASE_URL; ?>/admin/respuestas" class="text-gray-500 hover:text-gray-700">
+        <a href="<?php echo BASE_URL; ?>/admin/respuestas" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
             <i class="fas fa-arrow-left mr-1"></i> Volver
         </a>
     </div>
@@ -95,7 +95,7 @@
             <div class="flex justify-between mt-4 gap-4">
                 <button type="button" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-md transition duration-200 prev-step" data-prev="step-5">Atrás</button>
                 <div class="flex gap-4">
-                    <a href="<?php echo BASE_URL; ?>/admin/respuestas" class="inline-block bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-6 rounded-md transition duration-200">
+                    <a href="<?php echo BASE_URL; ?>/admin/respuestas" class="inline-block bg-gray-400 hover:bg-gray-500 dark:bg-zinc-600 dark:hover:bg-zinc-500 text-white font-semibold py-2 px-6 rounded-md transition duration-200">
                         Cancelar
                     </a>
                     <button type="submit" class="btn-primary">
