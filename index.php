@@ -1,4 +1,4 @@
 <?php
 
-header('Location: Socioeconomico/frontend/public/');
+header('Location: frontend/public/'); 
 exit;
