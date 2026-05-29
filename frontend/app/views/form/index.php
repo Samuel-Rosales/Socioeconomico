@@ -1,3 +1,12 @@
+<?php
+$Sede = '';
+
+if (isset($sede) && is_string($sede)) {
+    $Sede = strtoupper(trim($sede));
+} 
+
+?>
+
 <main class="container mx-auto px-4 py-8">
     <aside class="absolute top-4 right-4 z-50">
         <?php include __DIR__ . '/../components/theme-toggle.php'; ?>
@@ -172,7 +181,7 @@
                 </div>
 
                 <form id="init-form" class="p-6" novalidate>
-                    <p class=" text-center">Este formulario es exclusivo para estudiantes de la IUJO. Por favor, ingresa tu número de cédula para iniciar el proceso de llenado del formulario socioeconómico.</p>
+                    <p class=" text-center">Este formulario es exclusivo para estudiantes del <?php echo $Sede; ?>. Pulse aceptar para iniciar el proceso de llenado del formulario socioeconómico.</p>
 
                     <div class="mt-6 flex justify-center gap-2">
                         <button type="button" id="init-accept" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded shadow-sm text-sm font-medium transition">ACEPTAR</button>
