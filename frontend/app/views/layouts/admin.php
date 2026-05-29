@@ -77,16 +77,12 @@ if ($cssVersion !== null) {
         $headerUserMeta = (string)$authUser['rol']['codigo'];
     }
 
-    if (isset($authUser['instituto']) && is_array($authUser['instituto'])) {
+    if (is_array($authUser['instituto'])) {
         $institutoTxt = '';
         if (!empty($authUser['instituto']['siglas']) && is_string($authUser['instituto']['siglas'])) {
             $institutoTxt = (string)$authUser['instituto']['siglas'];
         } elseif (!empty($authUser['instituto']['nombre']) && is_string($authUser['instituto']['nombre'])) {
             $institutoTxt = (string)$authUser['instituto']['nombre'];
-        }
-
-        if ($institutoTxt !== '') {
-            $headerUserMeta = ($headerUserMeta !== '') ? ($headerUserMeta . ' · ' . $institutoTxt) : $institutoTxt;
         }
     }
 
@@ -165,6 +161,11 @@ if ($cssVersion !== null) {
                 <i class="fas fa-file-alt w-5 text-center"></i> Respuestas
             </a>
             <?php if ($isSuperAdmin): ?>
+                <a href="<?php echo BASE_URL; ?>/admin/configuracion-encuestas" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 <?php echo ($current_page === 'encuesta_config') ? 'bg-primary2-50 text-primary2-600 font-medium selec-darck-inten ' : 'text-gray-700 hover:bg-gray-100  '; ?>">
+                    <i class="fas fa-toggle-on w-5 text-center"></i> Encuestas
+                </a>
+            <?php endif; ?>
+            <?php if ($isSuperAdmin): ?>
                 <a href="<?php echo BASE_URL; ?>/admin/catalogos" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 <?php echo ($current_page === 'catalogs') ? 'bg-primary2-50 text-primary2-600 font-medium selec-darck-inten ' : 'text-gray-700 hover:bg-gray-100  '; ?>">
                     <i class="fas fa-list w-5 text-center"></i> Configuración
                 </a>
@@ -172,7 +173,7 @@ if ($cssVersion !== null) {
         </nav>
         <!-- Form para Logout -->
         <form action="<?php echo BASE_URL; ?>/logout" method="POST" class="p-4 text-sm border-t border-gray-400 mt-2">
-            <button type="submit" class="text-red-500 hover:text-red-700 font-medium flex items-center gap-2 w-full">
+            <button type="submit" class="text-red-500 hover:text-red-700 font-medium flex items-center gap-2 w-full cursor-pointer transition-colors duration-200">
                 <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
             </button>
         </form>
@@ -184,22 +185,23 @@ if ($cssVersion !== null) {
     <!-- Main Content wrapper -->
     <main class="flex-1 flex flex-col h-screen overflow-hidden transition-all duration-300 md:ml-64">
         <!-- Top Navbar -->
-        <header class="bg-white shadow-sm flex items-center justify-between px-8 py-6 sticky top-0 z-20 shrink-0 transition-colors duration-300 h-24 border-b border-gray-400">
+        <header class="bg-white shadow-sm flex items-center justify-between px-4 sm:px-8 py-6 sticky top-0 z-20 shrink-0 transition-colors duration-300 h-24 border-b border-gray-400 @container">
             <div class="flex items-center h-10">
                 <button id="mobile-menu-btn" class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none" aria-controls="mobile-sidebar" aria-expanded="false">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
-                <h2 class="text-xl font-semibold text-gray-800 ml-4 md:ml-0">
+                <h2 class=" text-lg md:text-xl lg:text-2xl font-semibold text-gray-800 ml-4 md:ml-0">
                     <?php
                     $titles = [
                         'dashboard' => 'Panel Principal',
                         'reportes' => 'Reportes',
-                        'reportes_dashboard_general' => 'Reportes · Resumen General',
-                        'reportes_analisis_academico' => 'Reportes · Análisis Académico',
-                        'reportes_demografico_vulnerabilidad' => 'Reportes · Perfil Socioeconómico por Carreras',
+                        'reportes_dashboard_general' => 'Resumen General',
+                        'reportes_analisis_academico' => 'Análisis Académico',
+                        'reportes_demografico_vulnerabilidad' => 'Perfil Socioeconómico',
                         'users' => 'Gestión de Usuarios',
                         'responses' => 'Respuestas Recibidas',
-                        'catalogs' => 'Configuración de Encuestas'
+                        'catalogs' => 'Configuración de Encuestas',
+                        'encuesta_config' => 'Estado de Encuestas',
                     ];
                     echo isset($titles[$current_page]) ? $titles[$current_page] : 'Administración';
                     ?>
@@ -208,7 +210,7 @@ if ($cssVersion !== null) {
 
             <div class="flex items-center gap-4">
 
-                <div class="text-right leading-tight max-w-56">
+                <div id="name-user" class="text-right leading-tight max-w-56 hidden lg:block">
                     <div class="text-sm font-semibold text-gray-700 truncate " title="<?php echo htmlspecialchars((string)$headerUserName); ?>">
                         <?php echo htmlspecialchars((string)$headerUserName); ?>
                     </div>
