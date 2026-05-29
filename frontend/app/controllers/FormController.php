@@ -176,12 +176,6 @@ class FormController extends Controller
         // Crear modelo con datos del formulario
         $encuesta = new Encuesta($_POST);
 
-        // DEBUG: Verificar qué llega en $_POST
-        error_log("[FRONTEND DEBUG] \$_POST keys: " . implode(', ', array_keys($_POST)));
-        error_log("[FRONTEND DEBUG] ambientes_vivienda en \$_POST: " . json_encode($_POST['ambientes_vivienda'] ?? 'NO_SET'));
-        error_log("[FRONTEND DEBUG] activos_vivienda en \$_POST: " . json_encode($_POST['activos_vivienda'] ?? 'NO_SET'));
-        error_log("[FRONTEND DEBUG] servicios_vivienda en \$_POST: " . json_encode($_POST['servicios_vivienda'] ?? 'NO_SET'));
-
         // Agregamos la sede al modelo
         if (!empty($sede)) {
             $encuesta->set('sede', $sede); // suponiendo que el backend reciba la sede o la enviemos
@@ -215,11 +209,6 @@ class FormController extends Controller
             }
 
             $payload = $encuesta->toArray();
-
-            // DEBUG: Verificar qué devuelve toArray()
-            error_log("[FRONTEND DEBUG] payload toArray() - ambientes_vivienda: " . json_encode($payload['ambientes_vivienda'] ?? 'NO_SET'));
-            error_log("[FRONTEND DEBUG] payload toArray() - activos_vivienda: " . json_encode($payload['activos_vivienda'] ?? 'NO_SET'));
-            error_log("[FRONTEND DEBUG] payload toArray() - servicios_vivienda: " . json_encode($payload['servicios_vivienda'] ?? 'NO_SET'));
 
             if (isset($_FILES['foto_cedula'])
                 && is_array($_FILES['foto_cedula'])
