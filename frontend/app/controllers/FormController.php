@@ -57,6 +57,13 @@ class FormController extends Controller
             $_SESSION['sede_actual'] = $sede;
         }
 
+        // Verificar que el instituto tenga encuestas activas
+        if (!$this->verificarEncuestaActiva($sede)) {
+            $this->closeSession();
+            $this->view('form/encuesta_desactivada', ['sede' => $sede]);
+            return;
+        }
+
         // Obtener errores y datos antiguos de sesión
         $errors = isset($_SESSION['errors']) ? $_SESSION['errors'] : [];
         $oldData = isset($_SESSION['form_data']) ? $_SESSION['form_data'] : [];
@@ -130,6 +137,18 @@ class FormController extends Controller
         if (!$this->isPost()) {
             $redirectPath = !empty($sede) ? BASE_URL . "/{$sede}/formulario" : BASE_URL . '/';
             $this->redirect($redirectPath);
+            return;
+        }
+
+        // Verificar que el instituto tenga encuestas activas
+        if (!$this->verificarEncuestaActiva($sede)) {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['errors'] = ['Las encuestas están temporalmente desactivadas para este instituto.'];
+            $_SESSION['form_data'] = $_POST;
+            $this->closeSession();
+            $this->redirect(BASE_URL . '/');
             return;
         }
 
@@ -389,6 +408,26 @@ class FormController extends Controller
         }
 
         return null;
+    }
+
+    private function verificarEncuestaActiva($sede)
+    {
+        if (empty($sede)) {
+            return true;
+        }
+        try {
+            $this->configurarTenantPorSede($sede);
+            $response = $this->apiService->get('/instituto/estado-encuesta');
+            if ($response['success'] && isset($response['data']['data'])) {
+                $estado = $response['data']['data'];
+                $key = strtolower($sede);
+                if (isset($estado[$key]) && $estado[$key] === false) {
+                    return false;
+                }
+            }
+        } catch (\Exception $e) {
+        }
+        return true;
     }
 
 }

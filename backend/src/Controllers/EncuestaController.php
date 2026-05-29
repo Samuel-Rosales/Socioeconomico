@@ -208,6 +208,27 @@ class EncuestaController
             }
         }
 
+        // Verificar que el instituto tenga encuestas activas (solo para público, no para admins)
+        $actor = Auth::getActorIfAuthenticated();
+        if (!$actor) {
+            $institutoId = (int)$requestData['instituto_id'];
+            $institutoModel = new \App\Models\InstitutoModel();
+            $encuestaActiva = $institutoModel->getEncuestaActivaById($institutoId);
+            if ($encuestaActiva === false) {
+                http_response_code(403);
+                echo json_encode([
+                    'success' => false,
+                    'data' => [
+                        'errors' => [
+                            'instituto' => ['Las encuestas están temporalmente desactivadas para este instituto.'],
+                        ],
+                    ],
+                    'message' => 'Encuestas desactivadas',
+                ]);
+                return;
+            }
+        }
+
         // 2. Procesar archivo de cédula (si fue enviado)
         $uploadResult = $this->handleCedulaUpload($requestData);
         

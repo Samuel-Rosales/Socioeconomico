@@ -47,6 +47,14 @@ $router->post('/admin/usuarios/create', 'AdminUsersController@create');
 $router->post('/admin/usuarios/update/:id', 'AdminUsersController@update');
 $router->post('/admin/usuarios/delete/:id', 'AdminUsersController@delete');
 
+// Admin - Configuración de encuestas
+$router->get('/admin/configuracion-encuestas', 'AdminController@encuestaConfig');
+$router->post('/admin/configuracion-encuestas/toggle', 'AdminController@encuestaConfigToggle');
+
+// Admin - Crear encuesta
+$router->get('/admin/encuestas/nueva', 'AdminController@nuevaEncuesta');
+$router->post('/admin/encuestas/nueva', 'AdminController@crearEncuesta');
+
 // Ruta 404
 $router->notFound(function () {
     $controller = new App\Controllers\ErrorsController();

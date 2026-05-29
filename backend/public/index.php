@@ -82,5 +82,9 @@ $router->post('/usuarios', 'App\\Controllers\\UsuarioController@store');
 $router->put('/usuarios/:id', 'App\\Controllers\\UsuarioController@update');
 $router->delete('/usuarios/:id', 'App\\Controllers\\UsuarioController@destroy');
 
+// Instituto - estado de encuestas
+$router->get('/instituto/estado-encuesta', 'App\\Controllers\\InstitutoController@estadoEncuesta');
+$router->put('/instituto/estado-encuesta/:id', 'App\\Controllers\\InstitutoController@toggleEncuesta');
+
 // 5. Ejecutamos el router
 $router->run();

@@ -81,6 +81,44 @@ class Auth
         return trim(substr($authHeader, 7));
     }
 
+    public static function getActorIfAuthenticated()
+    {
+        $token = self::getBearerToken();
+        if (empty($token)) {
+            return null;
+        }
+
+        $payload = AuthToken::verify($token);
+        if (!$payload) {
+            return null;
+        }
+
+        $userId = isset($payload['sub']) ? (int)$payload['sub'] : 0;
+        if ($userId <= 0) {
+            return null;
+        }
+
+        $usuarioModel = new UsuarioModel();
+        $usuario = $usuarioModel->getByIdRaw($userId);
+        if (!$usuario || (int)($usuario['activo'] ?? 0) !== 1) {
+            return null;
+        }
+
+        $rolCodigo = $payload['rol'] ?? ($usuario['rol_codigo'] ?? null);
+        $rolNombre = $payload['rol_nombre'] ?? ($usuario['rol_nombre'] ?? null);
+
+        return [
+            'id' => $userId,
+            'ci' => $payload['ci'] ?? ($usuario['ci'] ?? null),
+            'rol' => $rolCodigo,
+            'rol_nombre' => $rolNombre,
+            'rol_id' => isset($payload['rol_id']) ? (int)$payload['rol_id'] : (isset($usuario['rol_id']) ? (int)$usuario['rol_id'] : null),
+            'instituto_id' => array_key_exists('instituto_id', $payload)
+                ? ($payload['instituto_id'] !== null ? (int)$payload['instituto_id'] : null)
+                : (isset($usuario['instituto_id']) ? (int)$usuario['instituto_id'] : null),
+        ];
+    }
+
     private static function fail($status, $message, array $errors = [])
     {
         header('Content-Type: application/json');
