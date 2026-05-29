@@ -11,7 +11,7 @@
             <a class="flex justify-center h-28 w-full items-center @container" href="<?php echo BASE_URL; ?>/">
                 <?php include APP_PATH . '/views/components/logo.php'; ?>
             </a>
-            <h1 class="text-4xl leading-tight text-slate-700 dark:text-slate-100 font-medium mb-2">Login Socio Economico </h1>
+            <h1 class="text-4xl leading-tight text-slate-700 dark:text-slate-100 font-medium mb-2">Login Socioeconómico</h1>
             <p class="text-slate-500 dark:text-slate-300 text-lg">Por favor, coloca tu usuario y contraseña</p>
         </div>
 
