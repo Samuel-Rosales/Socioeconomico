@@ -220,8 +220,9 @@ class EncuestaService {
             $datosPrincipales = $this->limpiarDatos($requestData, $rules);
             $relaciones = $this->normalizarRelaciones($requestData);
 
-            // DEBUG
-            // error_log("[ENCUESTA SERVICE DEBUG] url_cedula en datosPrincipales: " . ($datosPrincipales['url_cedula'] ?? 'NULL'));
+            // DEBUG: Verificar relaciones normalizadas
+            error_log("[BACKEND SERVICE DEBUG] relaciones normalizadas: " . json_encode($relaciones, JSON_UNESCAPED_UNICODE));
+            error_log("[BACKEND SERVICE DEBUG] datosPrincipales keys: " . implode(', ', array_keys($datosPrincipales)));
 
             $id = $this->model->guardarCompleta($datosPrincipales, $relaciones);
             return ['success' => true, 'id' => $id];
