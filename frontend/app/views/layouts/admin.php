@@ -114,7 +114,7 @@ if ($cssVersion !== null) {
     <!-- Sidebar -->
     <aside id="mobile-sidebar" class="bg-white w-64 h-screen text-gray-800 hidden grid grid-rows-[auto_1fr_auto]  md:grid md:grid-rows-[auto_1fr_auto] fixed inset-y-0 left-0 z-999 md:z-30 overflow-y-auto">
         <a class="flex border-b border-gray-400 justify-center h-24 w-full px-1.5 items-center @container" href="<?php echo BASE_URL; ?>/">
-            <?php include APP_PATH . '/views/components/logo.php'; ?>
+            <?php include APP_PATH . '/views/components/logo-short.php'; ?>
         </a>
         <nav class="p-4 space-y-2">
 
