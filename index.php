@@ -1,4 +1,4 @@
 <?php
 
-header('Location: ' . __DIR__ . '/frontend/public/');
+header('Location: Socioeconomico/frontend/public/');
 exit;
