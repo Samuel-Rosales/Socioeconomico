@@ -1227,4 +1227,325 @@ class AdminController extends Controller
             'apiError' => $apiError,
         ], 'admin');
     }
+
+    public function encuestaConfig()
+    {
+        $this->checkAuth();
+        $this->requireSuperAdmin();
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $flash = null;
+        if (!empty($_SESSION['flash_message'])) {
+            $flash = [
+                'type' => isset($_SESSION['flash_type']) ? (string)$_SESSION['flash_type'] : 'info',
+                'message' => (string)$_SESSION['flash_message'],
+            ];
+        }
+        unset($_SESSION['flash_type'], $_SESSION['flash_message']);
+        $this->closeSession();
+
+        $institutos = [];
+        $apiError = null;
+
+        try {
+            $response = $this->encuestaService->getEstadoEncuestas();
+            if ($response['success'] && isset($response['data']['data'])) {
+                $estadoMap = $response['data']['data'];
+
+                $catalogResponse = $this->catalogoService->institutos();
+                $catalogPayload = isset($catalogResponse['data']) && is_array($catalogResponse['data']) ? $catalogResponse['data'] : null;
+                if (!empty($catalogResponse['success']) && $catalogPayload) {
+                    $instData = (isset($catalogPayload['success']) && array_key_exists('data', $catalogPayload) && is_array($catalogPayload['data']))
+                        ? $catalogPayload['data']
+                        : $catalogPayload;
+                    if (is_array($instData)) {
+                        foreach ($instData as $inst) {
+                            $siglas = isset($inst['siglas']) ? strtolower((string)$inst['siglas']) : '';
+                            $inst['encuesta_activa'] = isset($estadoMap[$siglas]) ? (bool)$estadoMap[$siglas] : true;
+                            $institutos[] = $inst;
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            $apiError = ['status' => 0, 'message' => 'Error de conexión: ' . $e->getMessage()];
+        }
+
+        $this->view('admin/encuesta_config', [
+            'title' => 'Configuración de Encuestas | Admin',
+            'current_page' => 'encuesta_config',
+            'institutos' => $institutos,
+            'apiError' => $apiError,
+            'flash' => $flash,
+        ], 'admin');
+    }
+
+    public function encuestaConfigToggle()
+    {
+        $this->checkAuth();
+        $this->requireSuperAdmin();
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $id = isset($_POST['instituto_id']) ? (int)$_POST['instituto_id'] : 0;
+        if ($id <= 0) {
+            $_SESSION['flash_type'] = 'error';
+            $_SESSION['flash_message'] = 'ID de instituto inválido.';
+            $this->redirect(BASE_URL . '/admin/configuracion-encuestas');
+            return;
+        }
+
+        try {
+            $response = $this->encuestaService->toggleEncuesta($id);
+            if (!empty($response['success'])) {
+                $data = isset($response['data']['data']) ? $response['data']['data'] : [];
+                $activa = isset($data['encuesta_activa']) ? (bool)$data['encuesta_activa'] : null;
+                $_SESSION['flash_type'] = 'success';
+                $_SESSION['flash_message'] = $activa ? 'Encuestas activadas correctamente.' : 'Encuestas desactivadas correctamente.';
+            } else {
+                $_SESSION['flash_type'] = 'error';
+                $_SESSION['flash_message'] = 'No se pudo cambiar el estado.';
+            }
+        } catch (\Exception $e) {
+            $_SESSION['flash_type'] = 'error';
+            $_SESSION['flash_message'] = 'Error de conexión: ' . $e->getMessage();
+        }
+
+        $this->redirect(BASE_URL . '/admin/configuracion-encuestas');
+    }
+
+    public function nuevaEncuesta()
+    {
+        $this->checkAuth();
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $authUser = isset($_SESSION['auth_user']) && is_array($_SESSION['auth_user']) ? $_SESSION['auth_user'] : [];
+        $actorRol = isset($authUser['rol']) && is_array($authUser['rol']) && !empty($authUser['rol']['codigo'])
+            ? (string)$authUser['rol']['codigo'] : null;
+        $institutoId = null;
+        if (isset($authUser['instituto']) && is_array($authUser['instituto']) && !empty($authUser['instituto']['id'])) {
+            $institutoId = (int)$authUser['instituto']['id'];
+        }
+
+        $errors = isset($_SESSION['errors']) ? $_SESSION['errors'] : [];
+        $oldData = isset($_SESSION['form_data']) ? $_SESSION['form_data'] : [];
+        unset($_SESSION['errors'], $_SESSION['form_data']);
+        $this->closeSession();
+
+        $catalogos = $this->cargarCatalogosAdmin();
+
+        $institutos = [];
+        if ($actorRol === 'SUPER_ADMIN') {
+            try {
+                $instResponse = $this->catalogoService->institutos();
+                $instPayload = isset($instResponse['data']) && is_array($instResponse['data']) ? $instResponse['data'] : null;
+                if (!empty($instResponse['success']) && $instPayload) {
+                    $instData = (isset($instPayload['success']) && array_key_exists('data', $instPayload) && is_array($instPayload['data']))
+                        ? $instPayload['data'] : $instPayload;
+                    if (is_array($instData)) {
+                        $institutos = $instData;
+                    }
+                }
+            } catch (\Exception $e) {
+                $institutos = [];
+            }
+        }
+
+        $this->view('admin/crear_encuesta', [
+            'title' => 'Nueva Encuesta | Admin',
+            'current_page' => 'responses',
+            'errors' => $errors,
+            'old' => $oldData,
+            'catalogos' => $catalogos,
+            'institutoId' => $institutoId,
+            'institutos' => $institutos,
+            'isSuperAdmin' => ($actorRol === 'SUPER_ADMIN'),
+        ], 'admin');
+    }
+
+    public function crearEncuesta()
+    {
+        $this->checkAuth();
+
+        if (!$this->isPost()) {
+            $this->redirect(BASE_URL . '/admin/encuestas/nueva');
+            return;
+        }
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        $authUser = isset($_SESSION['auth_user']) && is_array($_SESSION['auth_user']) ? $_SESSION['auth_user'] : [];
+        $actorRol = isset($authUser['rol']) && is_array($authUser['rol']) && !empty($authUser['rol']['codigo'])
+            ? (string)$authUser['rol']['codigo'] : null;
+        $adminInstitutoId = null;
+        if (isset($authUser['instituto']) && is_array($authUser['instituto']) && !empty($authUser['instituto']['id'])) {
+            $adminInstitutoId = (int)$authUser['instituto']['id'];
+        }
+        $this->closeSession();
+
+        $institutoId = null;
+        if ($actorRol === 'SUPER_ADMIN' && isset($_POST['instituto_id']) && is_numeric($_POST['instituto_id'])) {
+            $institutoId = (int)$_POST['instituto_id'];
+        } elseif ($adminInstitutoId !== null) {
+            $institutoId = $adminInstitutoId;
+        }
+
+        if ($institutoId === null) {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['errors'] = ['No se pudo determinar el instituto. Seleccione un instituto válido.'];
+            $_SESSION['form_data'] = $_POST;
+            $this->closeSession();
+            $this->redirect(BASE_URL . '/admin/encuestas/nueva');
+            return;
+        }
+
+        $_POST['instituto_id'] = $institutoId;
+
+        $cedula = isset($_POST['cedula']) ? trim((string)$_POST['cedula']) : '';
+        $email = isset($_POST['email']) ? trim((string)$_POST['email']) : '';
+
+        if ($cedula !== '' || $email !== '') {
+            try {
+                $checkResponse = $this->apiService->get('/encuesta/check', array_filter([
+                    'cedula' => $cedula !== '' ? $cedula : null,
+                    'email' => $email !== '' ? $email : null,
+                ]));
+                if (!empty($checkResponse['success']) && isset($checkResponse['data']['data'])) {
+                    $dupes = $checkResponse['data']['data'];
+                    $dupeErrors = [];
+                    if (!empty($dupes['cedula_exists'])) {
+                        $dupeErrors[] = 'Ya existe una encuesta con la cédula ' . htmlspecialchars($cedula);
+                    }
+                    if (!empty($dupes['email_exists'])) {
+                        $dupeErrors[] = 'Ya existe una encuesta con el email ' . htmlspecialchars($email);
+                    }
+                    if (!empty($dupeErrors)) {
+                        if (session_status() === PHP_SESSION_NONE) {
+                            session_start();
+                        }
+                        $_SESSION['errors'] = $dupeErrors;
+                        $_SESSION['form_data'] = $_POST;
+                        $this->closeSession();
+                        $this->redirect(BASE_URL . '/admin/encuestas/nueva');
+                        return;
+                    }
+                }
+            } catch (\Exception $e) {
+            }
+        }
+
+        $encuesta = new \App\Models\Encuesta($_POST);
+        if (!$encuesta->validate()) {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['errors'] = $encuesta->getErrors();
+            $_SESSION['form_data'] = $_POST;
+            $this->closeSession();
+            $this->redirect(BASE_URL . '/admin/encuestas/nueva');
+            return;
+        }
+
+        try {
+            $payload = $encuesta->toArray();
+            $payload['instituto_id'] = $institutoId;
+
+            if (isset($_FILES['foto_cedula'])
+                && is_array($_FILES['foto_cedula'])
+                && isset($_FILES['foto_cedula']['error'])
+                && (int)$_FILES['foto_cedula']['error'] === UPLOAD_ERR_OK
+            ) {
+                $tmpName = (string)$_FILES['foto_cedula']['tmp_name'];
+                $mimeType = (string)$_FILES['foto_cedula']['type'];
+                $originalName = (string)$_FILES['foto_cedula']['name'];
+                if ($tmpName !== '' && is_file($tmpName)) {
+                    $payload['foto_cedula'] = new \CURLFile($tmpName, $mimeType, $originalName);
+                }
+            }
+
+            $response = $this->apiService->post('/encuesta', $payload);
+
+            $payloadData = isset($response['data']) && is_array($response['data']) ? $response['data'] : null;
+            $payloadSuccess = is_array($payloadData) && array_key_exists('success', $payloadData) ? (bool)$payloadData['success'] : null;
+
+            if (!empty($response['success']) && ($payloadSuccess === null || $payloadSuccess === true)) {
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
+                $_SESSION['flash_type'] = 'success';
+                $_SESSION['flash_message'] = 'Encuesta creada correctamente.';
+                $this->closeSession();
+                $this->redirect(BASE_URL . '/admin/respuestas');
+            } else {
+                $errors = [];
+                if (is_array($payloadData) && isset($payloadData['data']['errors']) && is_array($payloadData['data']['errors'])) {
+                    foreach ($payloadData['data']['errors'] as $fieldErrors) {
+                        if (is_array($fieldErrors)) {
+                            foreach ($fieldErrors as $msg) {
+                                if (is_string($msg) && trim($msg) !== '') {
+                                    $errors[] = trim($msg);
+                                }
+                            }
+                        } elseif (is_string($fieldErrors) && trim($fieldErrors) !== '') {
+                            $errors[] = trim($fieldErrors);
+                        }
+                    }
+                }
+                if (empty($errors)) {
+                    $errorMsg = (is_array($payloadData) && isset($payloadData['message']) && is_string($payloadData['message']) && trim($payloadData['message']) !== '')
+                        ? trim($payloadData['message'])
+                        : 'Error al crear la encuesta.';
+                    $errors[] = $errorMsg;
+                }
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
+                $_SESSION['errors'] = $errors;
+                $_SESSION['form_data'] = $_POST;
+                $this->closeSession();
+                $this->redirect(BASE_URL . '/admin/encuestas/nueva');
+            }
+        } catch (\Exception $e) {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['errors'] = ['Error de conexión: ' . $e->getMessage()];
+            $_SESSION['form_data'] = $_POST;
+            $this->closeSession();
+            $this->redirect(BASE_URL . '/admin/encuestas/nueva');
+        }
+    }
+
+    private function cargarCatalogosAdmin()
+    {
+        try {
+            $response = $this->apiService->get('/catalogo/all');
+            if ($response['success'] && isset($response['data']['data'])) {
+                return $response['data']['data'];
+            }
+        } catch (\Exception $e) {
+        }
+        return [
+            'nacionalidad' => [], 'sexo' => [], 'tipo_estudiante' => [], 'carrera' => [],
+            'semestre' => [], 'estado_civil' => [], 'condicion_laboral' => [],
+            'relacion_laboral' => [], 'tipo_organizacion' => [], 'sector_trabajo' => [],
+            'categoria_ocupacional' => [], 'tipo_convivencia' => [], 'tipo_vivienda' => [],
+            'tenencia_vivienda' => [], 'ambiente_vivienda' => [], 'activo_vivienda' => [],
+            'servicio_vivienda' => [], 'frecuencia_agua' => [], 'frecuencia_aseo' => [],
+            'frecuencia_electricidad' => [], 'frecuencia_gas' => [], 'transporte' => [],
+            'dependencia_economica' => [], 'fuente_ingreso' => [], 'ingreso_familiar' => [],
+            'nivel_educacion' => [], 'tipo_empresa' => [], 'veracidad' => [], 'tipo_beca' => [],
+        ];
+    }
 }
