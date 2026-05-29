@@ -35,6 +35,7 @@
     --color-green-800: oklch(44.8% 0.119 151.328);
     --color-cyan-100: oklch(95.6% 0.045 203.388);
     --color-cyan-600: oklch(60.9% 0.126 221.723);
+    --color-sky-50: oklch(97.7% 0.013 236.62);
     --color-blue-50: oklch(97% 0.014 254.604);
     --color-blue-100: oklch(93.2% 0.032 255.585);
     --color-blue-200: oklch(88.2% 0.059 254.128);
@@ -329,6 +330,9 @@
   .top-0 {
     top: calc(var(--spacing) * 0);
   }
+  .top-1\/2 {
+    top: calc(1 / 2 * 100%);
+  }
   .top-4 {
     top: calc(var(--spacing) * 4);
   }
@@ -346,6 +350,9 @@
   }
   .right-6 {
     right: calc(var(--spacing) * 6);
+  }
+  .bottom-0 {
+    bottom: calc(var(--spacing) * 0);
   }
   .bottom-6 {
     bottom: calc(var(--spacing) * 6);
@@ -400,6 +407,9 @@
     @media (width >= 96rem) {
       max-width: 96rem;
     }
+  }
+  .m-auto {
+    margin: auto;
   }
   .mx-1 {
     margin-inline: calc(var(--spacing) * 1);
@@ -656,6 +666,9 @@
   .min-w-full {
     min-width: 100%;
   }
+  .min-w-screen {
+    min-width: 100vw;
+  }
   .flex-1 {
     flex: 1;
   }
@@ -680,6 +693,10 @@
   }
   .translate-x-5 {
     --tw-translate-x: calc(var(--spacing) * 5);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  .-translate-y-1\/2 {
+    --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
   .rotate-180 {
@@ -1010,6 +1027,9 @@
   .bg-red-100 {
     background-color: var(--color-red-100);
   }
+  .bg-red-500 {
+    background-color: var(--color-red-500);
+  }
   .bg-red-900 {
     background-color: var(--color-red-900);
   }
@@ -1052,6 +1072,13 @@
     --tw-mask-linear: var(--tw-mask-left), var(--tw-mask-right), var(--tw-mask-bottom), var(--tw-mask-top);
     --tw-mask-bottom: linear-gradient(to bottom, var(--tw-mask-bottom-from-color) var(--tw-mask-bottom-from-position), var(--tw-mask-bottom-to-color) var(--tw-mask-bottom-to-position));
     --tw-mask-bottom-to-color: var(--color-blue-50);
+  }
+  .mask-linear-from-sky-50 {
+    mask-image: var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic);
+    mask-composite: intersect;
+    --tw-mask-linear-stops: var(--tw-mask-linear-position), var(--tw-mask-linear-from-color) var(--tw-mask-linear-from-position), var(--tw-mask-linear-to-color) var(--tw-mask-linear-to-position);
+    --tw-mask-linear: linear-gradient(var(--tw-mask-linear-stops));
+    --tw-mask-linear-from-color: var(--color-sky-50);
   }
   .fill-black {
     fill: var(--color-black);
@@ -2821,6 +2848,31 @@ select.input-field {
   inherits: false;
   initial-value: transparent;
 }
+@property --tw-mask-linear-position {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --tw-mask-linear-from-position {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0%;
+}
+@property --tw-mask-linear-to-position {
+  syntax: "*";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-mask-linear-from-color {
+  syntax: "*";
+  inherits: false;
+  initial-value: black;
+}
+@property --tw-mask-linear-to-color {
+  syntax: "*";
+  inherits: false;
+  initial-value: transparent;
+}
 @property --tw-leading {
   syntax: "*";
   inherits: false;
@@ -3101,6 +3153,11 @@ select.input-field {
       --tw-mask-bottom-to-position: 100%;
       --tw-mask-bottom-from-color: black;
       --tw-mask-bottom-to-color: transparent;
+      --tw-mask-linear-position: 0deg;
+      --tw-mask-linear-from-position: 0%;
+      --tw-mask-linear-to-position: 100%;
+      --tw-mask-linear-from-color: black;
+      --tw-mask-linear-to-color: transparent;
       --tw-leading: initial;
       --tw-font-weight: initial;
       --tw-tracking: initial;
