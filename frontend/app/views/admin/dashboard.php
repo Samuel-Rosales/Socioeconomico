@@ -64,7 +64,7 @@
     <div class="bg-white rounded-lg shadow-sm border border-gray-400 p-6">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg font-bold text-gray-800">Últimas Encuestas</h3>
-            <a href="<?php echo BASE_URL; ?>/admin/respuestas" class="text-sm text-blue-500 hover:underline">Ver todas</a>
+            <a href="<?php echo BASE_URL; ?>/admin/respuestas" class="text-sm text-blue-500 hover:underline dark:hover:text-blue-400">Ver todas</a>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -122,7 +122,7 @@
             ?>
 
             <li>
-                <a href="<?php echo BASE_URL; ?>/admin/reportes/dashboard-general" class="flex items-center p-3 hover:bg-gray-100 rounded border border-gray-400 transition">
+                <a href="<?php echo BASE_URL; ?>/admin/reportes/dashboard-general" class="flex items-center p-3 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded border border-gray-400 dark:border-zinc-600 transition">
                     <div class="p-2 bg-indigo-100 text-indigo-600 rounded mr-3"><i class="fas fa-chart-pie"></i></div>
                     <div>
                         <p class="font-medium text-gray-800">Dashboard general</p>
@@ -132,7 +132,7 @@
             </li>
 
             <li>
-                <a href="<?php echo BASE_URL; ?>/admin/reportes/analisis-academico" class="flex items-center p-3 hover:bg-gray-100 rounded border border-gray-400 transition">
+                <a href="<?php echo BASE_URL; ?>/admin/reportes/analisis-academico" class="flex items-center p-3 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded border border-gray-400 dark:border-zinc-600 transition">
                     <div class="p-2 bg-cyan-100 text-cyan-600 rounded mr-3"><i class="fas fa-layer-group"></i></div>
                     <div>
                         <p class="font-medium text-gray-800">Análisis académico</p>
@@ -142,7 +142,7 @@
             </li>
 
             <li>
-                <a href="<?php echo BASE_URL; ?>/admin/reportes/demografico-vulnerabilidad" class="flex items-center p-3 hover:bg-gray-100 rounded border border-gray-400 transition">
+                <a href="<?php echo BASE_URL; ?>/admin/reportes/demografico-vulnerabilidad" class="flex items-center p-3 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded border border-gray-400 dark:border-zinc-600 transition">
                     <div class="p-2 bg-rose-100 text-rose-600 rounded mr-3"><i class="fas fa-table"></i></div>
                     <div>
                         <p class="font-medium text-gray-800">Perfil social</p>
@@ -153,7 +153,7 @@
 
             <?php if ($dashIsSuperAdmin): ?>
                 <li>
-                    <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center p-3 hover:bg-gray-100 rounded border border-gray-400 transition">
+                    <a href="<?php echo BASE_URL; ?>/admin/usuarios" class="flex items-center p-3 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded border border-gray-400 dark:border-zinc-600 transition">
                         <div class="p-2 bg-blue-100 text-blue-500 rounded mr-3"><i class="fas fa-user-plus"></i></div>
                         <div>
                             <p class="font-medium text-gray-800">Añadir nuevo usuario</p>
@@ -162,7 +162,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="<?php echo BASE_URL; ?>/admin/catalogos" class="flex items-center p-3 hover:bg-gray-100 rounded border border-gray-400 transition">
+                    <a href="<?php echo BASE_URL; ?>/admin/catalogos" class="flex items-center p-3 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded border border-gray-400 dark:border-zinc-600 transition">
                         <div class="p-2 bg-purple-100 text-purple-500 rounded mr-3"><i class="fas fa-edit"></i></div>
                         <div>
                             <p class="font-medium text-gray-800">Modificar Catálogos</p>

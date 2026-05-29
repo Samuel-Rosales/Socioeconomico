@@ -25,12 +25,12 @@
         <div class="flex items-center gap-2">
             <?php if (!empty($isSuperAdmin) && isset($encuesta) && is_array($encuesta) && !empty($encuesta) && !empty($encuesta['id'])): ?>
                 <?php if (!empty($editMode)): ?>
-                    <a href="<?php echo BASE_URL; ?>/admin/respuestas/<?php echo (int)$encuesta['id']; ?>" class="px-3 py-2 border rounded text-sm text-gray-700 hover:bg-gray-50">Cancelar edición</a>
+                    <a href="<?php echo BASE_URL; ?>/admin/respuestas/<?php echo (int)$encuesta['id']; ?>" class="px-3 py-2 border rounded text-sm text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-700">Cancelar edición</a>
                 <?php else: ?>
                     <a href="<?php echo BASE_URL; ?>/admin/respuestas/<?php echo (int)$encuesta['id']; ?>?edit=1" class="px-3 py-2 rounded text-sm text-white bg-blue-600 hover:bg-blue-700">Editar</a>
                 <?php endif; ?>
             <?php endif; ?>
-            <a href="<?php echo BASE_URL; ?>/admin/respuestas" class="px-3 py-2 border rounded text-sm text-gray-700 hover:bg-gray-50">Volver</a>
+            <a href="<?php echo BASE_URL; ?>/admin/respuestas" class="px-3 py-2 border rounded text-sm text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-700">Volver</a>
         </div>
     </div>
 
@@ -371,7 +371,7 @@
 
                 <div class="mt-6 flex items-center gap-3">
                     <button type="submit" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Guardar cambios</button>
-                    <a href="<?php echo BASE_URL; ?>/admin/respuestas/<?php echo (int)$encuesta['id']; ?>" class="px-4 py-2 border rounded text-gray-700 hover:bg-gray-50">Cancelar</a>
+                    <a href="<?php echo BASE_URL; ?>/admin/respuestas/<?php echo (int)$encuesta['id']; ?>" class="px-4 py-2 border rounded text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-700">Cancelar</a>
                 </div>
             </form>
         <?php endif; ?>
