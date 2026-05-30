@@ -9,18 +9,18 @@
     el.setAttribute('aria-hidden', 'true');
   }
 
-  function formatLocalDateTime(date) {
+  function formatUTCDateTime(date) {
     var pad = function (value) {
       value = String(value);
       return value.length < 2 ? '0' + value : value;
     };
 
-    return date.getFullYear() + '-' +
-      pad(date.getMonth() + 1) + '-' +
-      pad(date.getDate()) + ' ' +
-      pad(date.getHours()) + ':' +
-      pad(date.getMinutes()) + ':' +
-      pad(date.getSeconds());
+    return date.getUTCFullYear() + '-' +
+      pad(date.getUTCMonth() + 1) + '-' +
+      pad(date.getUTCDate()) + ' ' +
+      pad(date.getUTCHours()) + ':' +
+      pad(date.getUTCMinutes()) + ':' +
+      pad(date.getUTCSeconds());
   }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -33,7 +33,7 @@
 
     function setStartDate() {
       var surveyInicio = qs('#survey-start-date');
-      var startDate = formatLocalDateTime(new Date());
+      var startDate = formatUTCDateTime(new Date());
 
       if (surveyInicio && !surveyInicio.value) {
         surveyInicio.value = startDate;
@@ -45,7 +45,7 @@
         setStartDate();
         closeModal();
 
-        var firstField = qs('#cedula');
+        var firstField = qs('#nombres');
         if (firstField) {
           firstField.focus();
         }

@@ -1,6 +1,8 @@
 <?php
 // public/index.php
 
+date_default_timezone_set('UTC');
+
 // Headers CORS para permitir peticiones desde el frontend
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
@@ -81,6 +83,10 @@ $router->get('/usuarios/:id', 'App\\Controllers\\UsuarioController@show');
 $router->post('/usuarios', 'App\\Controllers\\UsuarioController@store');
 $router->put('/usuarios/:id', 'App\\Controllers\\UsuarioController@update');
 $router->delete('/usuarios/:id', 'App\\Controllers\\UsuarioController@destroy');
+
+// Instituto - estado de encuestas
+$router->get('/instituto/estado-encuesta', 'App\\Controllers\\InstitutoController@estadoEncuesta');
+$router->put('/instituto/estado-encuesta/:id', 'App\\Controllers\\InstitutoController@toggleEncuesta');
 
 // 5. Ejecutamos el router
 $router->run();

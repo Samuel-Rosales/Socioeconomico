@@ -74,4 +74,14 @@ class EncuestaService
 
         return $items;
     }
+
+    public function getEstadoEncuestas()
+    {
+        return $this->api->get('/instituto/estado-encuesta');
+    }
+
+    public function toggleEncuesta($institutoId)
+    {
+        return $this->api->put('/instituto/estado-encuesta/' . (int)$institutoId, []);
+    }
 }

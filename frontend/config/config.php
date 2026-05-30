@@ -34,8 +34,14 @@ define('APP_PATH', ROOT_PATH . '/app');
 define('PUBLIC_PATH', ROOT_PATH . '/public');
 define('CONFIG_PATH', ROOT_PATH . '/config');
 
-// Base URL para redirecciones y assets (ej: /FRONTEND-SOCIOECONOMICO)
-define('BASE_URL', getenv('BASE_URL') ?: 'http://localhost:8080');
+// Base URL para redirecciones y assets (auto-detecta dominio si no está en .env)
+function _detectBaseUrl(): string
+{
+    $proto = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    return $proto . '://' . $host . "/Socioeconomico/frontend/public";
+}
+define('BASE_URL', getenv('BASE_URL') ?: _detectBaseUrl());
 
 // Configuración de la aplicación
 define('APP_NAME', getenv('APP_NAME') ?: 'Formulario Socioeconómico');
@@ -60,3 +66,22 @@ define('SEDE_INSTITUTO_MAP', getenv('SEDE_INSTITUTO_MAP') ? json_decode(getenv('
 // Otras constantes
 define('SITE_URL', getenv('SITE_URL') ?: 'http://localhost');
 define('SITE_NAME', getenv('SITE_NAME') ?: 'Formulario Socioeconómico');
+
+/**
+ * Convierte una fecha/hora UTC a America/Caracas y la formatea para mostrar.
+ * Si el valor ya está formateado (contiene texto no numérico), lo devuelve tal cual.
+ */
+function formatFechaUTC($value, $format = 'd M Y, h:i A')
+{
+    if (!is_string($value) || trim($value) === '') {
+        return $value;
+    }
+
+    try {
+        $dt = new DateTime($value, new DateTimeZone('UTC'));
+        $dt->setTimezone(new DateTimeZone('America/Caracas'));
+        return $dt->format($format);
+    } catch (Exception $e) {
+        return $value;
+    }
+}

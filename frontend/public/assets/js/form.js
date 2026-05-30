@@ -1,6 +1,7 @@
 // form.js - Interactividad del formulario socioeconómico
 
 document.addEventListener('DOMContentLoaded', function () {
+
     let bypassSubmitValidation = false;
 
     const pad = value => String(value).padStart(2, '0');
@@ -8,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getFechaLimites() {
         const today = new Date();
-        const maxDate = new Date(today.getFullYear() - 14, today.getMonth(), today.getDate());
+        const maxDate = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate());
         const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
         return {
             maxDate,
@@ -34,12 +35,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function validateFechaNacimientoInput(fechaNacimientoEl) {
-        if (!fechaNacimientoEl) return true;
+        if (!fechaNacimientoEl) return false;
 
         const fechaVal = fechaNacimientoEl.value;
         if (!fechaVal) {
-            fechaNacimientoEl.setCustomValidity('');
-            return true;
+            fechaNacimientoEl.setCustomValidity('Este campo es obligatorio.');
+            return false;
         }
 
         const limites = getFechaLimites();
@@ -125,6 +126,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (cedulaFile) {
         cedulaFile.addEventListener('change', function () {
             const file = this.files[0];
+            const cedulaFileLabel = document.querySelector('label[for="foto_cedula"].input-field');
+            if (cedulaFileLabel) {
+                cedulaFileLabel.classList.remove('border-red-500', 'ring-2', 'ring-red-500');
+            }
+            if (cedulaFileName) {
+                cedulaFileName.classList.remove('text-red-500', 'dark:text-red-400');
+                cedulaFileName.classList.add('text-gray-500', 'dark:text-slate-300');
+            }
+            this.setCustomValidity('');
             if (file) {
                 // Validar tamaño (5MB máximo)
                 const maxSize = 5 * 1024 * 1024; // 5MB en bytes
@@ -133,6 +143,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     this.value = '';
                     if (cedulaFileName) {
                         cedulaFileName.textContent = 'Ningún archivo seleccionado';
+                        cedulaFileName.classList.remove('text-red-500', 'dark:text-red-400');
+                        cedulaFileName.classList.add('text-gray-500', 'dark:text-slate-300');
                     }
                     return;
                 }
@@ -144,15 +156,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     this.value = '';
                     if (cedulaFileName) {
                         cedulaFileName.textContent = 'Ningún archivo seleccionado';
+                        cedulaFileName.classList.remove('text-red-500', 'dark:text-red-400');
+                        cedulaFileName.classList.add('text-gray-500', 'dark:text-slate-300');
                     }
                     return;
                 }
 
                 if (cedulaFileName) {
                     cedulaFileName.textContent = file.name;
+                    cedulaFileName.classList.remove('text-red-500', 'dark:text-red-400');
+                    cedulaFileName.classList.add('text-gray-500', 'dark:text-slate-300');
                 }
             } else if (cedulaFileName) {
                 cedulaFileName.textContent = 'Ningún archivo seleccionado';
+                cedulaFileName.classList.remove('text-red-500', 'dark:text-red-400');
+                cedulaFileName.classList.add('text-gray-500', 'dark:text-slate-300');
             }
         });
     }
@@ -242,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const surveyStartDateInput = document.getElementById('survey-start-date');
             if (surveyStartDateInput && !surveyStartDateInput.value) {
-                surveyStartDateInput.value = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                surveyStartDateInput.value = new Date().toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, '');
             }
 
             const activeStep = document.querySelector('.form-step:not(.hidden)');
@@ -270,8 +288,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const formData = new FormData(form);
-            console.log('[Formulario socioeconómico] inicio:', formData.get('inicio'));
-            console.log('[Formulario socioeconómico] payload:', Array.from(formData.entries()));
 
             bypassSubmitValidation = true;
             if (typeof form.requestSubmit === 'function') {
@@ -330,6 +346,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 telefonoEl.setCustomValidity('Seleccione un prefijo (0414/0416/0424/0426) o escriba el teléfono completo de 11 dígitos.');
             } else {
                 telefonoEl.setCustomValidity('');
+            }
+        }
+
+        // Validación explícita del archivo de cédula (input oculto)
+        const cedulaFileEl = stepElement.querySelector('#foto_cedula');
+        if (cedulaFileEl) {
+            const cedulaFileLabel = stepElement.querySelector('label[for="foto_cedula"].input-field');
+            const cedulaFileName = stepElement.querySelector('#foto_cedula_filename') || document.getElementById('foto_cedula_filename');
+            const hasFile = !!(cedulaFileEl.files && cedulaFileEl.files.length > 0);
+
+            if (!hasFile) {
+                cedulaFileEl.setCustomValidity('Debe seleccionar la foto de la cédula.');
+                if (cedulaFileLabel) {
+                    cedulaFileLabel.classList.add('border-red-500', 'ring-2', 'ring-red-500');
+                }
+                if (cedulaFileName) {
+                    cedulaFileName.textContent = 'Debe seleccionar la foto de la cédula.';
+                    cedulaFileName.classList.remove('text-gray-500', 'dark:text-slate-300');
+                    cedulaFileName.classList.add('text-red-500', 'dark:text-red-400');
+                }
+                isValid = false;
+                if (!firstInvalidInput) firstInvalidInput = cedulaFileEl;
+            } else {
+                const selectedFile = cedulaFileEl.files[0];
+                cedulaFileEl.setCustomValidity('');
+                if (cedulaFileLabel) {
+                    cedulaFileLabel.classList.remove('border-red-500', 'ring-2', 'ring-red-500');
+                }
+                if (cedulaFileName) {
+                    cedulaFileName.textContent = selectedFile ? selectedFile.name : 'Ningún archivo seleccionado';
+                    cedulaFileName.classList.remove('text-red-500', 'dark:text-red-400');
+                    cedulaFileName.classList.add('text-gray-500', 'dark:text-slate-300');
+                }
             }
         }
 

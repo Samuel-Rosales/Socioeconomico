@@ -359,24 +359,30 @@ class EncuestaModel extends BaseModel {
         // Relación: Activos de Vivienda
         if (!empty($relaciones['activos'])) {
             foreach ($relaciones['activos'] as $activoId) {
+                $activoId = (int)$activoId;
+                if ($activoId <= 0) continue;
                 $stmt = $this->db->prepare("INSERT INTO ConjuntoActivoVivienda (encuesta_id, activo_vivienda_id) VALUES (?, ?)");
-                $stmt->execute([$encuestaId, $activoId]);
+                $stmt->execute([(int)$encuestaId, $activoId]);
             }
         }
 
         // Relación: Servicios de Vivienda
         if (!empty($relaciones['servicios'])) {
             foreach ($relaciones['servicios'] as $servicioId) {
+                $servicioId = (int)$servicioId;
+                if ($servicioId <= 0) continue;
                 $stmt = $this->db->prepare("INSERT INTO ConjuntoServicioVivienda (encuesta_id, servicio_vivienda_id) VALUES (?, ?)");
-                $stmt->execute([$encuestaId, $servicioId]);
+                $stmt->execute([(int)$encuestaId, $servicioId]);
             }
         }
 
         // Relación: Ambientes de Vivienda
         if (!empty($relaciones['ambientes'])) {
             foreach ($relaciones['ambientes'] as $ambienteId) {
+                $ambienteId = (int)$ambienteId;
+                if ($ambienteId <= 0) continue;
                 $stmt = $this->db->prepare("INSERT INTO ConjuntoAmbienteVivienda (encuesta_id, ambiente_vivienda_id) VALUES (?, ?)");
-                $stmt->execute([$encuestaId, $ambienteId]);
+                $stmt->execute([(int)$encuestaId, $ambienteId]);
             }
         }
     }

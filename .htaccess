@@ -1,0 +1,18 @@
+# ==========================================
+# Apache Configuration - Socioeconomico
+# ==========================================
+# Redirige todas las peticiones a frontend/public/
+# excepto la carpeta backend/ que tiene su propio .htaccess
+# ==========================================
+
+RewriteEngine On
+RewriteBase /Socioeconomico/
+
+# Excluir carpeta backend/ (ya tiene su propio .htaccess)
+RewriteCond %{REQUEST_URI} ^/Socioeconomico/backend/ [NC]
+RewriteRule ^ - [L]
+
+# Redirigir todo a frontend/public/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ frontend/public/$1 [L]
