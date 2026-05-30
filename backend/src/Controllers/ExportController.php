@@ -66,6 +66,14 @@ class ExportController
             }
         }
 
+        if (isset($_GET['page']) && is_numeric($_GET['page']) && (int)$_GET['page'] > 0) {
+            $filters['page'] = (int)$_GET['page'];
+        }
+
+        if (isset($_GET['per_page']) && is_numeric($_GET['per_page']) && (int)$_GET['per_page'] > 0) {
+            $filters['per_page'] = (int)$_GET['per_page'];
+        }
+
         if (isset($_GET['instituto_id']) && is_numeric($_GET['instituto_id']) && (int)$_GET['instituto_id'] > 0) {
             if ($actor['rol'] === 'SUPER_ADMIN') {
                 $filters['instituto_id'] = (int)$_GET['instituto_id'];

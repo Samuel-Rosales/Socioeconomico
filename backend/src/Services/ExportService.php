@@ -283,7 +283,16 @@ class ExportService
         }
 
         $sql .= " ORDER BY e.id DESC";
-        $sql .= " LIMIT 10000";
+
+        $page = isset($filters['page']) && is_numeric($filters['page']) ? (int)$filters['page'] : null;
+        $perPage = isset($filters['per_page']) && is_numeric($filters['per_page']) ? (int)$filters['per_page'] : null;
+
+        if ($page !== null && $perPage !== null && $page > 0 && $perPage > 0) {
+            $offset = ($page - 1) * $perPage;
+            $sql .= " LIMIT " . (int)$perPage . " OFFSET " . (int)$offset;
+        } else {
+            $sql .= " LIMIT 10000";
+        }
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($bindings);

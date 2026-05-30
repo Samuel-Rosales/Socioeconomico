@@ -630,9 +630,9 @@ class AdminController extends Controller
             $page = 1;
         }
 
-        $perPage = isset($_GET['per_page']) && is_numeric($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
+        $perPage = isset($_GET['per_page']) && is_numeric($_GET['per_page']) ? (int)$_GET['per_page'] : 20;
         if ($perPage < 1) {
-            $perPage = 10;
+            $perPage = 20;
         }
         if ($perPage > 100) {
             $perPage = 100;
