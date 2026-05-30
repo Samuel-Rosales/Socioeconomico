@@ -16,7 +16,7 @@ class ExportService
         $this->db = Database::getConnection();
     }
 
-    public function exportarEncuestasExcel(array $filters = [])
+    public function exportarEncuestasExcel(array $filters = [], array $institutoInfo = [])
     {
         $data = $this->getEncuestasData($filters);
 
@@ -24,21 +24,24 @@ class ExportService
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Encuestas');
 
+        $this->agregarMembrete($sheet, $institutoInfo);
+
+        $headerRow = 6;
         $headers = [
-            'A1' => 'ID',
-            'B1' => 'Estudiante',
-            'C1' => 'Cédula',
-            'D1' => 'Carrera',
-            'E1' => 'Instituto',
-            'F1' => 'Fecha',
-            'G1' => 'Estrato',
+            'A' . $headerRow => 'ID',
+            'B' . $headerRow => 'Estudiante',
+            'C' . $headerRow => 'Cédula',
+            'D' . $headerRow => 'Carrera',
+            'E' . $headerRow => 'Instituto',
+            'F' . $headerRow => 'Fecha',
+            'G' . $headerRow => 'Estrato',
         ];
 
         foreach ($headers as $cell => $header) {
             $sheet->setCellValue($cell, $header);
         }
 
-        $sheet->getStyle('A1:G1')->applyFromArray([
+        $sheet->getStyle('A' . $headerRow . ':G' . $headerRow)->applyFromArray([
             'font' => ['bold' => true],
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
@@ -49,7 +52,7 @@ class ExportService
             ],
         ]);
 
-        $row = 2;
+        $row = $headerRow + 1;
         foreach ($data as $item) {
             $sheet->setCellValue('A' . $row, $item['id']);
             $sheet->setCellValue('B' . $row, $item['estudiante']);
@@ -65,7 +68,7 @@ class ExportService
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
-        $sheet->getStyle('A1:G' . ($row - 1))->applyFromArray([
+        $sheet->getStyle('A' . $headerRow . ':G' . ($row - 1))->applyFromArray([
             'borders' => [
                 'allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
             ],
@@ -80,6 +83,71 @@ class ExportService
         $writer->save($tempFile);
 
         return $tempFile;
+    }
+
+    private function agregarMembrete($sheet, array $institutoInfo)
+    {
+        $nombre = $institutoInfo['nombre'] ?? null;
+        $siglas = $institutoInfo['siglas'] ?? null;
+        $rol = $institutoInfo['rol'] ?? null;
+
+        if (empty($nombre)) {
+            if ($rol === 'SUPER_ADMIN') {
+                $nombre = 'Consolidado General';
+                $siglas = 'Todos los Institutos';
+            } else {
+                $nombre = 'Institución';
+                $siglas = '';
+            }
+        }
+
+        $nombreCompleto = !empty($siglas) ? $nombre . ' (' . $siglas . ')' : $nombre;
+
+        $sheet->mergeCells('A1:G1');
+        $sheet->setCellValue('A1', $nombreCompleto);
+        $sheet->getStyle('A1')->applyFromArray([
+            'font' => ['bold' => true, 'size' => 14],
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+        ]);
+
+        $sheet->mergeCells('A2:G2');
+        $sheet->setCellValue('A2', 'Reporte de Encuestas Socioeconómicas');
+        $sheet->getStyle('A2')->applyFromArray([
+            'font' => ['bold' => true, 'size' => 12],
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+        ]);
+
+        $fechaGeneracion = date('d M Y, h:i A');
+        $sheet->mergeCells('A3:G3');
+        $sheet->setCellValue('A3', 'Generado: ' . $fechaGeneracion);
+        $sheet->getStyle('A3')->applyFromArray([
+            'font' => ['italic' => true, 'size' => 10],
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+        ]);
+
+        $sheet->mergeCells('A4:G4');
+        $sheet->setCellValue('A4', '');
+
+        $sheet->getRowDimension(1)->setRowHeight(25);
+        $sheet->getRowDimension(2)->setRowHeight(20);
+        $sheet->getRowDimension(3)->setRowHeight(18);
+        $sheet->getRowDimension(4)->setRowHeight(10);
+
+        $sheet->getStyle('A1:G4')->applyFromArray([
+            'borders' => [
+                'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM],
+            ],
+        ]);
+
+        for ($i = 1; $i <= 4; $i++) {
+            $cell = 'A' . $i;
+            $sheet->getStyle($cell)->applyFromArray([
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => 'F9FAFB'],
+                ],
+            ]);
+        }
     }
 
     private function getEncuestasData(array $filters)
