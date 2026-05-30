@@ -86,6 +86,85 @@
       hide(modal);
     }
 
+    // Delete confirmation modal - using event delegation on document
+    var confirmModal = null;
+    var confirmMessage = null;
+    var confirmCancel = null;
+    var confirmAccept = null;
+    var pendingDeleteId = null;
+
+    document.addEventListener('click', function (e) {
+      // Find delete button if clicked
+      var deleteBtn = e.target.closest('.js-delete-user');
+      if (deleteBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Lazy init modal elements
+        if (!confirmModal) confirmModal = qs('#confirm-modal');
+        if (!confirmMessage) confirmMessage = qs('#confirm-modal-message');
+        if (!confirmAccept) confirmAccept = qs('#confirm-modal-accept');
+
+        if (!confirmModal) return;
+
+        var userId = deleteBtn.getAttribute('data-id');
+        var userName = deleteBtn.getAttribute('data-nombre') || '';
+        pendingDeleteId = userId;
+
+        if (confirmMessage) confirmMessage.textContent = '¿Estás seguro de eliminar al usuario "' + (userName || 'este usuario') + '"?';
+        if (confirmAccept) confirmAccept.setAttribute('data-id', userId);
+        confirmModal.classList.remove('hidden');
+        confirmModal.setAttribute('aria-hidden', 'false');
+        return;
+      }
+
+      // Handle confirm accept button
+      if (e.target.id === 'confirm-modal-accept' || e.target.closest('#confirm-modal-accept')) {
+        if (confirmAccept) {
+          var userId = confirmAccept.getAttribute('data-id');
+          if (userId) {
+            var baseUrl = (window.__USERS_PAGE__ && window.__USERS_PAGE__.baseUrl ? window.__USERS_PAGE__.baseUrl : '');
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = baseUrl + '/admin/usuarios/delete/' + encodeURIComponent(userId);
+            document.body.appendChild(form);
+            form.submit();
+          }
+        }
+        if (confirmModal) {
+          confirmModal.classList.add('hidden');
+          confirmModal.setAttribute('aria-hidden', 'true');
+        }
+        pendingDeleteId = null;
+        return;
+      }
+
+      // Handle cancel / close
+      if (e.target.id === 'confirm-modal-cancel' ||
+          e.target.closest('#confirm-modal-cancel') ||
+          (confirmModal && e.target === confirmModal.querySelector('.absolute'))) {
+        if (confirmModal) {
+          confirmModal.classList.add('hidden');
+          confirmModal.setAttribute('aria-hidden', 'true');
+        }
+        pendingDeleteId = null;
+        return;
+      }
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        if (confirmModal && !confirmModal.classList.contains('hidden')) {
+          confirmModal.classList.add('hidden');
+          confirmModal.setAttribute('aria-hidden', 'true');
+          pendingDeleteId = null;
+        } else {
+          closeModal();
+        }
+      }
+    });
+
     // Open create
     if (btnNew) {
       btnNew.addEventListener('click', function () {
