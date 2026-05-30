@@ -60,7 +60,8 @@
     <?php endif; ?>
 
     <!-- Search/Filter -->
-    <form method="GET" action="<?php echo BASE_URL; ?>/admin/respuestas" class="mb-4 grid grid-cols-1 md:grid-cols-5 gap-4">
+    <?php $gridCols = (!empty($is_super_admin) && isset($institutos) && is_array($institutos)) ? 'md:grid-cols-5' : 'md:grid-cols-4'; ?>
+    <form method="GET" action="<?php echo BASE_URL; ?>/admin/respuestas" class="mb-4 grid grid-cols-1 <?php echo $gridCols; ?> gap-4">
         <input
             type="text"
             name="q"
