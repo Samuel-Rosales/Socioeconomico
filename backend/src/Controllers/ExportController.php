@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Auth;
 use App\Core\TenantContext;
 use App\Services\ExportService;
+use App\Models\InstitutoModel;
 
 class ExportController
 {
@@ -20,10 +21,25 @@ class ExportController
         $actor = Auth::requireAuth(['SUPER_ADMIN', 'ADMIN_SEDE', 'ANALISTA']);
 
         $institutoId = null;
+        $institutoNombre = null;
+        $institutoSiglas = null;
+
         if (isset($actor['rol']) && $actor['rol'] === 'SUPER_ADMIN') {
             $institutoId = TenantContext::resolveInstitutoId(null, false);
         } elseif (isset($actor['instituto_id'])) {
             $institutoId = $actor['instituto_id'];
+        }
+
+        if (!empty($institutoId)) {
+            $institutoModel = new InstitutoModel();
+            $stmt = $institutoModel->getAllConEstadoEncuesta();
+            foreach ($stmt as $inst) {
+                if ((int)$inst['id'] === (int)$institutoId) {
+                    $institutoNombre = $inst['nombre'];
+                    $institutoSiglas = $inst['siglas'];
+                    break;
+                }
+            }
         }
 
         $filters = [];
@@ -53,11 +69,27 @@ class ExportController
         if (isset($_GET['instituto_id']) && is_numeric($_GET['instituto_id']) && (int)$_GET['instituto_id'] > 0) {
             if ($actor['rol'] === 'SUPER_ADMIN') {
                 $filters['instituto_id'] = (int)$_GET['instituto_id'];
+
+                $institutoModel = new InstitutoModel();
+                $stmt = $institutoModel->getAllConEstadoEncuesta();
+                foreach ($stmt as $inst) {
+                    if ((int)$inst['id'] === (int)$_GET['instituto_id']) {
+                        $institutoNombre = $inst['nombre'];
+                        $institutoSiglas = $inst['siglas'];
+                        break;
+                    }
+                }
             }
         }
 
+        $institutoInfo = [
+            'nombre' => $institutoNombre,
+            'siglas' => $institutoSiglas,
+            'rol' => $actor['rol'] ?? null,
+        ];
+
         try {
-            $tempFile = $this->service->exportarEncuestasExcel($filters);
+            $tempFile = $this->service->exportarEncuestasExcel($filters, $institutoInfo);
 
             $filename = 'encuestas_' . date('Y-m-d_His') . '.xlsx';
 
