@@ -2,9 +2,14 @@
 <div class="bg-white rounded-lg shadow-sm border border-gray-400  p-6">
     <div class="flex justify-between items-center mb-6">
         <h3 class="text-xl font-bold text-gray-800">Respuestas Recibidas</h3>
-        <a href="<?php echo BASE_URL; ?>/admin/encuestas/nueva" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm text-sm font-medium transition">
-            <i class="fas fa-plus mr-2"></i> Nueva Encuesta
-        </a>
+        <div class="flex gap-2">
+            <button id="btnExportarExcel" type="button" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm text-sm font-medium transition">
+                <i class="fas fa-file-excel mr-2"></i> Exportar Excel
+            </button>
+            <a href="<?php echo BASE_URL; ?>/admin/encuestas/nueva" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm text-sm font-medium transition">
+                <i class="fas fa-plus mr-2"></i> Nueva Encuesta
+            </a>
+        </div>
     </div>
 
     <?php
@@ -222,4 +227,47 @@
             <?php endif; ?>
         </div>
     </div>
+
+    <script>
+    document.getElementById('btnExportarExcel').addEventListener('click', async () => {
+        const params = new URLSearchParams(window.location.search);
+        params.delete('page');
+
+        const authToken = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
+        if (!authToken) {
+            alert('Sesión expirada. Por favor recarga la página.');
+            return;
+        }
+
+        try {
+            const response = await fetch('<?php echo rtrim(API_BASE_URL, '/'); ?>/exportar/encuestas-excel?' + params.toString(), {
+                headers: {
+                    'Authorization': 'Bearer ' + authToken
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Error del servidor: ' + response.status);
+            }
+
+            const contentType = response.headers.get('Content-Type');
+            if (!contentType || !contentType.includes('spreadsheetml')) {
+                const text = await response.text();
+                throw new Error('Respuesta inválida del servidor');
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'encuestas_<?php echo date('Y-m-d_His'); ?>.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            alert('Error al exportar: ' + error.message);
+        }
+    });
+    </script>
 </div>
