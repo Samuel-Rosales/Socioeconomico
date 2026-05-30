@@ -232,7 +232,6 @@
     <script>
     document.getElementById('btnExportarExcel').addEventListener('click', async () => {
         const params = new URLSearchParams(window.location.search);
-        params.delete('page');
 
         const authToken = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
         if (!authToken) {
