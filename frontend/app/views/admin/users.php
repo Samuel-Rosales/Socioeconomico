@@ -203,7 +203,7 @@
     <div class="relative mx-auto mt-32 w-full max-w-md px-4">
         <div class="bg-white rounded-lg shadow-lg border">
             <div class="flex items-center gap-3 px-6 pt-6 pb-2">
-                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                <div class="shrink-0 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
                     <i class="fas fa-exclamation-triangle text-red-500 text-lg"></i>
                 </div>
                 <h4 class="text-lg font-semibold text-gray-800">¿Está seguro?</h4>
