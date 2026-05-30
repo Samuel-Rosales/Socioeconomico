@@ -605,10 +605,21 @@ class AdminController extends Controller
     {
         $this->checkAuth();
 
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $authUser = isset($_SESSION['auth_user']) && is_array($_SESSION['auth_user']) ? $_SESSION['auth_user'] : [];
+        $actorRol = (isset($authUser['rol']) && is_array($authUser['rol']) && !empty($authUser['rol']['codigo']))
+            ? (string)$authUser['rol']['codigo']
+            : null;
+        $isSuperAdmin = ($actorRol === 'SUPER_ADMIN');
+
         // Filtros/paginación vía querystring
         $q = isset($_GET['q']) ? trim((string)$_GET['q']) : '';
         $carreraId = isset($_GET['carrera_id']) ? trim((string)$_GET['carrera_id']) : '';
         $estrato = isset($_GET['estrato']) ? trim((string)$_GET['estrato']) : '';
+        $institutoId = isset($_GET['instituto_id']) && is_numeric($_GET['instituto_id']) ? (int)$_GET['instituto_id'] : null;
         // Compatibilidad: UI anterior enviaba "estado".
         if ($estrato === '' && isset($_GET['estado'])) {
             $estrato = trim((string)$_GET['estado']);
@@ -639,6 +650,9 @@ class AdminController extends Controller
         }
         if ($estrato !== '') {
             $params['estrato'] = $estrato;
+        }
+        if ($isSuperAdmin && $institutoId !== null) {
+            $params['instituto_id'] = $institutoId;
         }
 
         // Cargar listado de encuestas (resumen)
@@ -693,20 +707,27 @@ class AdminController extends Controller
             ];
         }
 
-        // Catálogo de carreras para el filtro
+        // Catálogo de carreras e institutos para el filtro
         $carreras = [];
-        try {
-            $institutoId = null;
+        $institutos = [];
+
+        // Instituto efectivo según rol
+        $filtroInstitutoId = null;
+        if ($isSuperAdmin) {
+            $filtroInstitutoId = $institutoId;
+        } else {
             if (session_status() === PHP_SESSION_ACTIVE && !empty($_SESSION['auth_user'])) {
                 $user = $_SESSION['auth_user'];
                 if (isset($user['instituto']) && is_array($user['instituto']) && !empty($user['instituto']['id'])) {
-                    $institutoId = (int)$user['instituto']['id'];
+                    $filtroInstitutoId = (int)$user['instituto']['id'];
                 }
             }
+        }
 
+        try {
             $catalogParams = [];
-            if (!empty($institutoId)) {
-                $catalogParams['instituto_id'] = $institutoId;
+            if (!empty($filtroInstitutoId)) {
+                $catalogParams['instituto_id'] = $filtroInstitutoId;
             }
 
             $catalogResponse = $this->apiService->get('/catalogo/carrera', $catalogParams);
@@ -724,18 +745,41 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             $carreras = [];
         }
-        
+
+        // Cargar institutos para super admin
+        if ($isSuperAdmin) {
+            try {
+                $institutosResponse = $this->apiService->get('/catalogo/instituto');
+                $institutosPayload = isset($institutosResponse['data']) && is_array($institutosResponse['data']) ? $institutosResponse['data'] : null;
+
+                if ($institutosResponse['success'] && $institutosPayload) {
+                    $institutosData = (isset($institutosPayload['success']) && array_key_exists('data', $institutosPayload) && is_array($institutosPayload['data']))
+                        ? $institutosPayload['data']
+                        : $institutosPayload;
+
+                    if (is_array($institutosData)) {
+                        $institutos = $institutosData;
+                    }
+                }
+            } catch (\Exception $e) {
+                $institutos = [];
+            }
+        }
+
 
         $this->view('admin/responses', [
             'title' => 'Respuestas a Encuestas | Admin',
             'current_page' => 'responses',
             'encuestas' => $encuestas,
             'carreras' => $carreras,
+            'institutos' => $institutos,
+            'is_super_admin' => $isSuperAdmin,
             'apiError' => $apiError,
             'filters' => [
                 'q' => $q,
                 'carrera_id' => $carreraId,
                 'estrato' => $estrato,
+                'instituto_id' => $institutoId,
                 'page' => $page,
                 'per_page' => $perPage,
             ],
