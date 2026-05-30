@@ -220,9 +220,6 @@ class EncuestaService {
             $datosPrincipales = $this->limpiarDatos($requestData, $rules);
             $relaciones = $this->normalizarRelaciones($requestData);
 
-            // DEBUG
-            // error_log("[ENCUESTA SERVICE DEBUG] url_cedula en datosPrincipales: " . ($datosPrincipales['url_cedula'] ?? 'NULL'));
-
             $id = $this->model->guardarCompleta($datosPrincipales, $relaciones);
             return ['success' => true, 'id' => $id];
 
@@ -503,7 +500,8 @@ class EncuestaService {
         }
 
         try {
-            $dt = new \DateTime($value);
+            $dt = new \DateTime($value, new \DateTimeZone('UTC'));
+            $dt->setTimezone(new \DateTimeZone('America/Caracas'));
             $meses = [
                 1 => 'ene', 2 => 'feb', 3 => 'mar', 4 => 'abr', 5 => 'may', 6 => 'jun',
                 7 => 'jul', 8 => 'ago', 9 => 'sep', 10 => 'oct', 11 => 'nov', 12 => 'dic',

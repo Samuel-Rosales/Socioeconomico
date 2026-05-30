@@ -18,7 +18,7 @@
 
         <div>
             <label for="cedula" class="label-field">Cédula <span class="text-primary2-500">*</span></label>
-            <input type="text" pattern="^[0-9]{7,8}$" id="cedula" name="cedula" required
+            <input type="text" pattern="^[0-9]{7,8}$" id="cedula" name="cedula" maxlength="8" required
                 value="<?php echo isset($old['cedula']) ? htmlspecialchars($old['cedula']) : ''; ?>"
                 oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                 class="input-field" placeholder="12344698">
@@ -53,16 +53,10 @@
                 <?php endif; ?>
             </select>
         </div>
-        
-        <?php
-        // Calculamos la fecha límite (hace exactamente 10 años)
-        $fechaLímite = date('Y-m-d', strtotime('-10 years'));
-        ?>
 
         <div>
             <label for="fecha_nacimiento" class="label-field">Fecha de Nacimiento <span class="text-primary2-500">*</span></label>
             <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required
-                max="<?php echo $fechaLímite; ?>"
                 value="<?php echo isset($old['fecha_nacimiento']) ? htmlspecialchars($old['fecha_nacimiento']) : ''; ?>"
                 class="input-field">
         </div>
@@ -103,7 +97,7 @@
                 <i class="fa-solid  fa-address-card" aria-hidden="true"></i>
                 <span>Selecionar imagen</span>
             </label>
-            <input id="foto_cedula" class="hidden" type="file" name="foto_cedula" accept="image/*">
+            <input id="foto_cedula" class="hidden" type="file" name="foto_cedula" accept="image/*" required>
             <small id="foto_cedula_filename" class="text-xs text-gray-500 dark:text-slate-300">Ningún archivo seleccionado</small>
         </div>
 

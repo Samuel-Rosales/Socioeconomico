@@ -253,7 +253,7 @@
                 ?>
             </div>
             <div class="text-sm text-gray-700 mt-1">
-                Fecha: <?php echo !empty($encuesta['creado']) ? htmlspecialchars((string)$encuesta['creado']) : '-'; ?>
+                Fecha: <?php echo !empty($encuesta['creado']) ? htmlspecialchars(formatFechaUTC((string)$encuesta['creado'])) : '-'; ?>
             </div>
             <div class="text-sm text-gray-700 mt-1">
                 Estrato: <?php
@@ -895,12 +895,24 @@
                             if ($urlCedula === '') {
                                 echo $renderBox('<span class="text-gray-400">-</span>');
                             } else {
-                                $filename = basename(parse_url($urlCedula, PHP_URL_PATH) ?: $urlCedula);
-                                $proxyUrl = BASE_URL . '/admin/cedulas/' . rawurlencode($filename);
-                                $img = '<a href="' . htmlspecialchars($proxyUrl) . '" target="_blank" rel="noopener" class="block overflow-hidden rounded border border-gray-200 bg-white p-2">'
-                                    . '<img src="' . htmlspecialchars($proxyUrl) . '" alt="Cédula de identidad" class="mx-auto block max-h-96 w-auto max-w-full">'
-                                    . '</a>';
-                                echo $renderBox($img);
+                                $path = parse_url($urlCedula, PHP_URL_PATH) ?: $urlCedula;
+                                $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                                $isImage = in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif'], true);
+                                $filename = basename($path);
+
+                                if ($isImage) {
+                                    $proxyUrl = BASE_URL . '/admin/cedulas/' . rawurlencode($filename);
+                                    $img = '<a href="' . htmlspecialchars($urlCedula) . '" target="_blank" rel="noopener" class="block overflow-hidden rounded border border-gray-200 bg-white p-2">'
+                                        . '<img src="' . htmlspecialchars($proxyUrl) . '" alt="Cédula de identidad" class="mx-auto block max-h-96 w-auto max-w-full">'
+                                        . '</a>';
+                                    echo $renderBox($img);
+                                } else {
+                                    $link = '<a href="' . htmlspecialchars($urlCedula) . '" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-2">'
+                                        . '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0 0L8 20"></path></svg>'
+                                        . htmlspecialchars($filename !== '' ? $filename : 'Ver documento')
+                                        . '</a>';
+                                    echo $renderBox($link);
+                                }
                             }
                         ?>
                     </div>
