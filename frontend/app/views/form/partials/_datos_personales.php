@@ -56,7 +56,13 @@
 
         <div>
             <label for="fecha_nacimiento" class="label-field">Fecha de Nacimiento <span class="text-primary2-500">*</span></label>
+            <?php
+                $hoy = new DateTime();
+                $maxDate = (new DateTime())->modify('-15 years')->format('Y-m-d');
+                $minDate = (new DateTime())->modify('-100 years')->format('Y-m-d');
+            ?>
             <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required
+                min="<?php echo $minDate; ?>" max="<?php echo $maxDate; ?>"
                 value="<?php echo isset($old['fecha_nacimiento']) ? htmlspecialchars($old['fecha_nacimiento']) : ''; ?>"
                 class="input-field">
         </div>
