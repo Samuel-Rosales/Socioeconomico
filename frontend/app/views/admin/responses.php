@@ -229,14 +229,21 @@
     </div>
 
     <script>
-    document.getElementById('btnExportarExcel').addEventListener('click', async () => {
-        const params = new URLSearchParams(window.location.search);
+    const btnExportarExcel = document.getElementById('btnExportarExcel');
 
+    btnExportarExcel.addEventListener('click', async () => {
+        const params = new URLSearchParams(window.location.search);
         const authToken = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
+        const originalHtml = btnExportarExcel.innerHTML;
+
         if (!authToken) {
             alert('Sesión expirada. Por favor recarga la página.');
             return;
         }
+
+        btnExportarExcel.disabled = true;
+        btnExportarExcel.classList.add('opacity-70', 'cursor-not-allowed');
+        btnExportarExcel.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Exportando...';
 
         try {
             const response = await fetch('<?php echo rtrim(API_BASE_URL, '/'); ?>/exportar/encuestas-excel?' + params.toString(), {
@@ -266,6 +273,10 @@
             window.URL.revokeObjectURL(url);
         } catch (error) {
             alert('Error al exportar: ' + error.message);
+        } finally {
+            btnExportarExcel.disabled = false;
+            btnExportarExcel.classList.remove('opacity-70', 'cursor-not-allowed');
+            btnExportarExcel.innerHTML = originalHtml;
         }
     });
     </script>
