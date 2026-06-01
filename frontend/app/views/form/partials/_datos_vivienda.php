@@ -33,7 +33,7 @@
         </div>
 
         <div>
-            <label for="tenencia_vivienda_id" class="label-field">Tenencia de Vivienda</label>
+            <label for="tenencia_vivienda_id" class="label-field">Tenencia de Vivienda<span class="text-primary2-500">*</span></label>
             <select id="tenencia_vivienda_id" name="tenencia_vivienda_id" class="input-field" required>
                 <option value="">Seleccione...</option>
                 <?php if (isset($catalogos['tenencia_vivienda'])): ?>
