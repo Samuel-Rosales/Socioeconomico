@@ -174,9 +174,15 @@
             $renderInput = function ($name, $label, $value, $type = 'text', $required = false) {
                 $req = $required ? 'required' : '';
                 $val = htmlspecialchars((string)$value);
+                $extra = '';
+                if ($type === 'date') {
+                    $maxDate = date('Y-m-d', strtotime('-15 years'));
+                    $minDate = date('Y-m-d', strtotime('-100 years'));
+                    $extra = 'min="' . $minDate . '" max="' . $maxDate . '"';
+                }
                 echo '<div>';
                 echo '<label class="label-field">' . htmlspecialchars($label) . ($required ? ' <span class="text-red-500">*</span>' : '') . '</label>';
-                echo '<input type="' . htmlspecialchars($type) . '" name="' . htmlspecialchars($name) . '" value="' . $val . '" class="input-field w-full" ' . $req . '>';
+                echo '<input type="' . htmlspecialchars($type) . '" name="' . htmlspecialchars($name) . '" value="' . $val . '" class="input-field w-full" ' . $req . ' ' . $extra . '>';
                 echo '</div>';
             };
 
@@ -922,3 +928,99 @@
 
     <?php endif; ?>
 </div>
+
+<?php if (!empty($isSuperAdmin) && !empty($editMode) && !empty($encuesta['id'])): ?>
+<script>
+(function() {
+    const pad = value => String(value).padStart(2, '0');
+    const toDateValue = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+    function getFechaLimites() {
+        const today = new Date();
+        const maxDate = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate());
+        const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
+        return {
+            maxDate,
+            minDate,
+            max: toDateValue(maxDate),
+            min: toDateValue(minDate),
+        };
+    }
+
+    function parseDateValue(value) {
+        if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(value)) return null;
+        const parts = value.split('-').map(Number);
+        if (parts.length !== 3) return null;
+        const year = parts[0];
+        const month = parts[1] - 1;
+        const day = parts[2];
+        const date = new Date(year, month, day);
+        if (Number.isNaN(date.getTime())) return null;
+        if (date.getFullYear() !== year || date.getMonth() !== month || date.getDate() !== day) {
+            return null;
+        }
+        return date;
+    }
+
+    function validateFechaNacimientoInput(fechaNacimientoEl) {
+        if (!fechaNacimientoEl) return false;
+
+        const fechaVal = fechaNacimientoEl.value;
+        if (!fechaVal) {
+            fechaNacimientoEl.setCustomValidity('Este campo es obligatorio.');
+            return false;
+        }
+
+        const limites = getFechaLimites();
+        const fechaDate = parseDateValue(fechaVal);
+        if (!fechaDate) {
+            fechaNacimientoEl.setCustomValidity('Fecha de nacimiento no válida.');
+            return false;
+        }
+
+        if (fechaDate > limites.maxDate) {
+            fechaNacimientoEl.setCustomValidity('Debe ser mayor de 14 años.');
+            return false;
+        }
+
+        if (fechaDate < limites.minDate) {
+            fechaNacimientoEl.setCustomValidity('Fecha de nacimiento no válida.');
+            return false;
+        }
+
+        fechaNacimientoEl.setCustomValidity('');
+        return true;
+    }
+
+    const fechaNacimientoInput = document.querySelector('input[name="fecha_nacimiento"]');
+    if (fechaNacimientoInput) {
+        const limites = getFechaLimites();
+        fechaNacimientoInput.setAttribute('max', limites.max);
+        fechaNacimientoInput.setAttribute('min', limites.min);
+
+        fechaNacimientoInput.addEventListener('change', function () {
+            validateFechaNacimientoInput(this);
+        });
+        fechaNacimientoInput.addEventListener('blur', function () {
+            validateFechaNacimientoInput(this);
+        });
+    }
+
+    const form = fechaNacimientoInput ? fechaNacimientoInput.closest('form') : null;
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            if (fechaNacimientoInput) {
+                const isValid = validateFechaNacimientoInput(fechaNacimientoInput);
+                if (!isValid) {
+                    e.preventDefault();
+                    fechaNacimientoInput.reportValidity();
+                    fechaNacimientoInput.classList.add('border-red-500');
+                } else {
+                    fechaNacimientoInput.classList.remove('border-red-500');
+                }
+            }
+        });
+    }
+})();
+</script>
+<?php endif; ?>

@@ -10,6 +10,8 @@
     <?php
         $filters = isset($filters) && is_array($filters) ? $filters : [];
         $carreras = isset($carreras) && is_array($carreras) ? $carreras : [];
+        $institutos = isset($institutos) && is_array($institutos) ? $institutos : [];
+        $isSuperAdmin = !empty($is_super_admin);
         $encuestas = isset($encuestas) && is_array($encuestas) ? $encuestas : ['items' => [], 'pagination' => []];
 
         $items = isset($encuestas['items']) && is_array($encuestas['items']) ? $encuestas['items'] : [];
@@ -32,6 +34,7 @@
         if (!empty($filters['q'])) $baseParams['q'] = (string)$filters['q'];
         if (!empty($filters['carrera_id'])) $baseParams['carrera_id'] = (string)$filters['carrera_id'];
         if (!empty($filters['estrato'])) $baseParams['estrato'] = (string)$filters['estrato'];
+        if (!empty($filters['instituto_id'])) $baseParams['instituto_id'] = (string)$filters['instituto_id'];
         if (!empty($filters['per_page'])) $baseParams['per_page'] = (int)$filters['per_page'];
 
         $buildUrl = function (array $overrides = []) use ($baseParams) {
@@ -59,7 +62,7 @@
     <?php endif; ?>
 
     <!-- Search/Filter -->
-    <form method="GET" action="<?php echo BASE_URL; ?>/admin/respuestas" class="mb-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+    <form method="GET" action="<?php echo BASE_URL; ?>/admin/respuestas" class="mb-4 grid grid-cols-1 md:grid-cols-5 gap-4">
         <input
             type="text"
             name="q"
@@ -69,6 +72,27 @@
         >
 
         <input type="hidden" name="per_page" value="<?php echo isset($filters['per_page']) ? (int)$filters['per_page'] : 10; ?>">
+
+        <?php if ($isSuperAdmin): ?>
+            <select
+                name="instituto_id"
+                class="border border-gray-300 rounded-md p-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
+                onchange="this.form.submit()"
+            >
+                <option value="">Todos los institutos</option>
+                <?php foreach ($institutos as $instituto): ?>
+                    <?php
+                        $id = isset($instituto['id']) ? (int)$instituto['id'] : 0;
+                        $nombre = isset($instituto['nombre']) ? (string)$instituto['nombre'] : '';
+                        $siglas = isset($instituto['siglas']) ? (string)$instituto['siglas'] : '';
+                        $selected = (isset($filters['instituto_id']) && (string)$filters['instituto_id'] !== '' && (int)$filters['instituto_id'] === $id);
+                    ?>
+                    <option value="<?php echo $id; ?>" <?php echo $selected ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($nombre . ($siglas !== '' ? ' (' . $siglas . ')' : '')); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        <?php endif; ?>
 
         <select
             name="carrera_id"
