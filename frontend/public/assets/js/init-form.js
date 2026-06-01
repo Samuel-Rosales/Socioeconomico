@@ -9,7 +9,14 @@
     el.setAttribute('aria-hidden', 'true');
   }
 
-  function formatUTCDateTime(date) {
+  function clearStartDate() {
+    var surveyInicio = qs('#survey-start-date');
+    if (surveyInicio) {
+      surveyInicio.value = '';
+    }
+  }
+
+  function formatLocalDateTime(date) {
     var pad = function (value) {
       value = String(value);
       return value.length < 2 ? '0' + value : value;
@@ -27,13 +34,19 @@
     var modal = qs('#init-modal');
     var acceptButton = qs('#init-accept');
 
+    clearStartDate();
+
+    window.addEventListener('pageshow', function () {
+      clearStartDate();
+    });
+
     function closeModal() {
       hide(modal);
     }
 
     function setStartDate() {
       var surveyInicio = qs('#survey-start-date');
-      var startDate = formatUTCDateTime(new Date());
+      var startDate = formatLocalDateTime(new Date());
 
       if (surveyInicio && !surveyInicio.value) {
         surveyInicio.value = startDate;
