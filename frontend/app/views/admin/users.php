@@ -161,11 +161,9 @@
                                     data-activo="<?php echo (int)$activo; ?>"
                                 ><i class="fas fa-edit"></i></button>
 
-                                <form class="inline" method="POST" action="<?php echo BASE_URL; ?>/admin/usuarios/delete/<?php echo (int)$id; ?>" onsubmit="return confirm('¿Eliminar este usuario?');">
-                                    <button type="submit" class="text-red-500 hover:text-red-700 mx-1" title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                <button type="button" class="text-red-500 hover:text-red-700 mx-1 js-delete-user" title="Eliminar" data-id="<?php echo (int)$id; ?>" data-nombre="<?php echo htmlspecialchars($nombre, ENT_QUOTES); ?>">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -195,6 +193,35 @@
                 class="px-3 py-1 border border-gray-400 rounded hover:bg-gray-50 <?php echo $nextDisabled ? 'pointer-events-none opacity-50' : ''; ?>"
                 href="<?php echo BASE_URL; ?>/admin/usuarios?<?php echo htmlspecialchars($buildQuery(['page' => min($totalPages, $page + 1)])); ?>"
             >Siguiente</a>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div id="confirm-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+    <div class="absolute inset-0 bg-black/40" data-modal-close></div>
+    <div class="relative mx-auto mt-32 w-full max-w-md px-4">
+        <div class="bg-white rounded-lg shadow-lg border">
+            <div class="flex items-center gap-3 px-6 pt-6 pb-2">
+                <div class="shrink-0 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                    <i class="fas fa-exclamation-triangle text-red-500 text-lg"></i>
+                </div>
+                <h4 class="text-lg font-semibold text-gray-800">¿Está seguro?</h4>
+            </div>
+            <div class="px-6 py-4">
+                <p id="confirm-modal-message" class="text-gray-600 text-center"></p>
+            </div>
+            <div class="flex justify-center gap-3 px-6 pb-6">
+                <button type="button" id="confirm-modal-cancel"
+                    class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-6 rounded-md transition"
+                    data-modal-close>
+                    Cancelar
+                </button>
+                <button type="button" id="confirm-modal-accept"
+                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-md transition">
+                    Eliminar
+                </button>
+            </div>
         </div>
     </div>
 </div>
