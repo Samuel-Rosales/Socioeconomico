@@ -49,14 +49,14 @@
 
         <div>
             <label for="numero_habitantes" class="label-field">Número de Habitantes <span class="text-primary2-500">*</span></label>
-            <input type="number" id="numero_habitantes" name="numero_habitantes" min="1"
+            <input type="number" id="numero_habitantes" name="numero_habitantes" min="1" max="100"
                 value="<?php echo isset($old['numero_habitantes']) ? htmlspecialchars($old['numero_habitantes']) : ''; ?>"
                 class="input-field" required>
         </div>
 
         <div>
             <label for="numero_ocupantes_familia" class="label-field">Número de Ocupantes de la Familia <span class="text-primary2-500">*</span></label>
-            <input type="number" id="numero_ocupantes_familia" name="numero_ocupantes_familia" min="1"
+            <input type="number" id="numero_ocupantes_familia" name="numero_ocupantes_familia" min="1" max="100"
                 value="<?php echo isset($old['numero_ocupantes_familia']) ? htmlspecialchars($old['numero_ocupantes_familia']) : ''; ?>"
                 class="input-field" required>
         </div>
