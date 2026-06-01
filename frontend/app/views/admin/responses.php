@@ -3,9 +3,9 @@
     <div class="flex justify-between items-center mb-6">
         <h3 class="text-xl font-bold text-gray-800">Respuestas Recibidas</h3>
         <div class="flex gap-2">
-            <button id="btnExportarExcel" type="button" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm text-sm font-medium transition">
+            <!-- <button id="btnExportarExcel" type="button" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm text-sm font-medium transition">
                 <i class="fas fa-file-excel mr-2"></i> Exportar Excel
-            </button>
+            </button> -->
             <a href="<?php echo BASE_URL; ?>/admin/encuestas/nueva" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm text-sm font-medium transition">
                 <i class="fas fa-plus mr-2"></i> Nueva Encuesta
             </a>
