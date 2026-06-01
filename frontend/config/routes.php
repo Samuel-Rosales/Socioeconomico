@@ -55,6 +55,9 @@ $router->post('/admin/configuracion-encuestas/toggle', 'AdminController@encuesta
 $router->get('/admin/encuestas/nueva', 'AdminController@nuevaEncuesta');
 $router->post('/admin/encuestas/nueva', 'AdminController@crearEncuesta');
 
+// Admin - Exportar Excel
+$router->get('/admin/exportar-excel', 'AdminController@exportarExcel');
+
 // Ruta 404
 $router->notFound(function () {
     $controller = new App\Controllers\ErrorsController();

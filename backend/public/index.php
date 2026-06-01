@@ -88,5 +88,8 @@ $router->delete('/usuarios/:id', 'App\\Controllers\\UsuarioController@destroy');
 $router->get('/instituto/estado-encuesta', 'App\\Controllers\\InstitutoController@estadoEncuesta');
 $router->put('/instituto/estado-encuesta/:id', 'App\\Controllers\\InstitutoController@toggleEncuesta');
 
+// Exportar encuestas a Excel
+$router->get('/exportar/encuestas-excel', 'App\\Controllers\\ExportController@exportarEncuestasExcel');
+
 // 5. Ejecutamos el router
 $router->run();

@@ -365,6 +365,16 @@ class UsuarioService
             ];
         }
 
+        $actorId = is_array($actor) ? ($actor['id'] ?? null) : null;
+        if ($actorId !== null && $actorId === $id) {
+            return [
+                'success' => false,
+                'status' => 400,
+                'message' => 'No puedes eliminarte a ti mismo',
+                'errors' => ['self_delete' => ['No está permitido eliminar tu propio usuario.']],
+            ];
+        }
+
         try {
             $ok = $this->usuarioModel->delete($id);
             if (!$ok) {
