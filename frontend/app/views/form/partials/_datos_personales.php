@@ -77,7 +77,7 @@
         <div>
             <label for="telefono" class="label-field">Teléfono <span class="text-primary2-500">*</span></label>
             <input type="tel" id="telefono" name="telefono" required
-                pattern="^(0424|0426|0422|0412|0414)[0-9]{7}$" maxlength="11"
+                pattern="^(0424|0426|0422|0412|0414|0416)[0-9]{7}$" maxlength="11"
                 value="<?php echo isset($old['telefono']) ? htmlspecialchars($old['telefono']) : ''; ?>"
                 oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                 class="input-field" placeholder="Ej: 04121234567">
