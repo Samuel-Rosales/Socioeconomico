@@ -63,7 +63,7 @@
         </div>
 
          <div>
-            <label class="label-field">¿Estudió en FyA?</label>
+            <label class="label-field">¿Estudió en Fe y Alegría?</label>
             <div class="flex gap-4">
                 <label class="inline-flex items-center">
                     <input type="radio" name="estudio_fya" value="1"
