@@ -605,10 +605,21 @@ class AdminController extends Controller
     {
         $this->checkAuth();
 
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $authUser = isset($_SESSION['auth_user']) && is_array($_SESSION['auth_user']) ? $_SESSION['auth_user'] : [];
+        $actorRol = (isset($authUser['rol']) && is_array($authUser['rol']) && !empty($authUser['rol']['codigo']))
+            ? (string)$authUser['rol']['codigo']
+            : null;
+        $isSuperAdmin = ($actorRol === 'SUPER_ADMIN');
+
         // Filtros/paginación vía querystring
         $q = isset($_GET['q']) ? trim((string)$_GET['q']) : '';
         $carreraId = isset($_GET['carrera_id']) ? trim((string)$_GET['carrera_id']) : '';
         $estrato = isset($_GET['estrato']) ? trim((string)$_GET['estrato']) : '';
+        $institutoId = isset($_GET['instituto_id']) && is_numeric($_GET['instituto_id']) ? (int)$_GET['instituto_id'] : null;
         // Compatibilidad: UI anterior enviaba "estado".
         if ($estrato === '' && isset($_GET['estado'])) {
             $estrato = trim((string)$_GET['estado']);
@@ -641,9 +652,9 @@ class AdminController extends Controller
             $page = 1;
         }
 
-        $perPage = isset($_GET['per_page']) && is_numeric($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
+        $perPage = isset($_GET['per_page']) && is_numeric($_GET['per_page']) ? (int)$_GET['per_page'] : 20;
         if ($perPage < 1) {
-            $perPage = 10;
+            $perPage = 20;
         }
         if ($perPage > 100) {
             $perPage = 100;
@@ -718,7 +729,7 @@ class AdminController extends Controller
             ];
         }
 
-        // Catálogo de carreras para el filtro
+        // Catálogo de carreras e institutos para el filtro
         $carreras = [];
         try {
             $catalogoInstitutoId = null;
@@ -732,6 +743,7 @@ class AdminController extends Controller
                 }
             }
 
+        try {
             $catalogParams = [];
             if (!empty($catalogoInstitutoId)) {
                 $catalogParams['instituto_id'] = $catalogoInstitutoId;
@@ -785,11 +797,14 @@ class AdminController extends Controller
             'carreras' => $carreras,
             'institutos' => $institutos,
             'is_super_admin' => $isSuperAdmin,
+            'institutos' => $institutos,
+            'is_super_admin' => $isSuperAdmin,
             'apiError' => $apiError,
             'filters' => [
                 'q' => $q,
                 'carrera_id' => $carreraId,
                 'estrato' => $estrato,
+                'instituto_id' => $institutoId,
                 'instituto_id' => $institutoId,
                 'page' => $page,
                 'per_page' => $perPage,
@@ -1602,5 +1617,92 @@ class AdminController extends Controller
             'dependencia_economica' => [], 'fuente_ingreso' => [], 'ingreso_familiar' => [],
             'nivel_educacion' => [], 'tipo_empresa' => [], 'veracidad' => [], 'tipo_beca' => [],
         ];
+    }
+
+    public function exportarExcel()
+    {
+        $this->checkAuth();
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (empty($_SESSION['auth_token'])) {
+            $this->redirect(BASE_URL . '/login');
+            return;
+        }
+
+        $token = $_SESSION['auth_token'];
+        $this->apiService->setHeader('Authorization', 'Bearer ' . (string)$token);
+        $this->closeSession();
+
+        $filters = [];
+        if (isset($_GET['q']) && is_string($_GET['q'])) {
+            $q = trim($_GET['q']);
+            if ($q !== '') {
+                $filters['q'] = $q;
+            }
+        }
+        if (isset($_GET['carrera_id']) && is_numeric($_GET['carrera_id']) && (int)$_GET['carrera_id'] > 0) {
+            $filters['carrera_id'] = (int)$_GET['carrera_id'];
+        }
+        if (isset($_GET['estrato']) && is_string($_GET['estrato'])) {
+            $estrato = trim($_GET['estrato']);
+            if ($estrato !== '') {
+                $filters['estrato'] = $estrato;
+            }
+        }
+        if (isset($_GET['instituto_id']) && is_numeric($_GET['instituto_id']) && (int)$_GET['instituto_id'] > 0) {
+            $filters['instituto_id'] = (int)$_GET['instituto_id'];
+        }
+
+        try {
+            $apiUrl = API_BASE_URL . 'exportar/encuestas-excel';
+            if (!empty($filters)) {
+                $apiUrl .= '?' . http_build_query($filters);
+            }
+
+            $ch = curl_init($apiUrl);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTPHEADER => [
+                    'Authorization: Bearer ' . $token,
+                    'Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                ],
+                CURLOPT_TIMEOUT => 60,
+            ]);
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error = curl_error($ch);
+            curl_close($ch);
+
+            if ($error) {
+                throw new \Exception('Error de conexión: ' . $error);
+            }
+
+            if ($httpCode !== 200) {
+                header('Content-Type: application/json');
+                http_response_code($httpCode);
+                echo json_encode(['success' => false, 'message' => 'Error del servidor']);
+                return;
+            }
+
+            $filename = 'encuestas_' . date('Y-m-d_His') . '.xlsx';
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            header('Content-Length: ' . strlen($response));
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+
+            echo $response;
+            exit;
+        } catch (\Exception $e) {
+            header('Content-Type: application/json');
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            exit;
+        }
     }
 }
