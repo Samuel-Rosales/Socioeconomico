@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Core\Database;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Shared\File;
 use PhpOffice\PhpSpreadsheet\Shared\StringUtilities;
 
 class ExportService
@@ -18,6 +19,43 @@ class ExportService
 
     public function exportarEncuestasExcel(array $filters = [], array $institutoInfo = [])
     {
+        // 1. Prevenir caídas por memoria o tiempo de ejecución en servidores con configuraciones restrictivas
+        @ini_set('memory_limit', '512M');
+        @set_time_limit(300);
+
+        // 2. Configurar directorio temporal dentro del proyecto (backend/storage/temp)
+        $tempDir = dirname(__DIR__, 2) . '/storage/temp';
+        if (!is_dir($tempDir)) {
+            @mkdir($tempDir, 0775, true);
+        }
+
+        $isTempDirWritable = is_dir($tempDir) && is_writable($tempDir);
+        $targetTempDir = $isTempDirWritable ? $tempDir : sys_get_temp_dir();
+
+        // Limpieza automática preventiva de archivos huérfanos con más de 1 hora
+        if ($isTempDirWritable) {
+            $archivosViejos = array_merge(
+                (array) glob($tempDir . '/export_*'),
+                (array) glob($tempDir . '/phpxltmp*')
+            );
+            $limiteTiempo = time() - 3600; // 1 hora de antigüedad
+            foreach ($archivosViejos as $archivo) {
+                if (is_file($archivo) && filemtime($archivo) < $limiteTiempo) {
+                    @unlink($archivo);
+                }
+            }
+        }
+
+        // Indicar a PHP y a las variables de entorno el directorio temporal
+        @ini_set('sys_temp_dir', $targetTempDir);
+        @ini_set('upload_tmp_dir', $targetTempDir);
+        @putenv("TMPDIR=" . $targetTempDir);
+        @putenv("TEMP=" . $targetTempDir);
+        @putenv("TMP=" . $targetTempDir);
+
+        // Indicar a PhpSpreadsheet que use upload_tmp_dir para sus archivos XML/ZIP intermedios
+        File::setUseUploadTempDirectory(true);
+
         $data = $this->getEncuestasData($filters);
 
         $spreadsheet = new Spreadsheet();
@@ -73,8 +111,24 @@ class ExportService
             $row++;
         }
 
-        foreach (range('A', ($institutoInfo['rol'] === 'SUPER_ADMIN' ? 'H' : 'G')) as $col) {
-            $sheet->getColumnDimension($col)->setAutoSize(true);
+        // Anchos de columna predefinidos (evita el costo excesivo de CPU y memoria de setAutoSize en miles de filas)
+        $columnWidths = [
+            'A' => 32, // Estudiante
+            'B' => 16, // Cédula
+            'C' => 30, // Correo
+            'D' => 18, // Teléfono
+            'E' => 32, // Carrera
+            'F' => 14, // Estrato
+            'G' => 24, // Fecha
+            'H' => 28  // Instituto
+        ];
+
+        $maxCol = ($institutoInfo['rol'] === 'SUPER_ADMIN') ? 'H' : 'G';
+        foreach ($columnWidths as $col => $width) {
+            if ($col > $maxCol) {
+                continue;
+            }
+            $sheet->getColumnDimension($col)->setWidth($width);
         }
 
         $sheet->getStyle('A' . $headerRow . ($institutoInfo['rol'] === 'SUPER_ADMIN' ? ':H' : ':G') . ($row - 1))->applyFromArray([
@@ -83,9 +137,14 @@ class ExportService
             ],
         ]);
 
-        $tempFile = tempnam(sys_get_temp_dir(), 'export_');
+        // 3. Crear archivo temporal en storage/temp con fallback a sys_get_temp_dir()
+        $tempFile = @tempnam($targetTempDir, 'export_');
+        if ($tempFile === false && $targetTempDir !== sys_get_temp_dir()) {
+            $tempFile = @tempnam(sys_get_temp_dir(), 'export_');
+        }
+
         if ($tempFile === false) {
-            throw new \Exception('No se pudo crear archivo temporal');
+            throw new \Exception('No se pudo crear el archivo temporal en el servidor. Verifique permisos en backend/storage/temp o /tmp.');
         }
 
         $writer = new Xlsx($spreadsheet);
